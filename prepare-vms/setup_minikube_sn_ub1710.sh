@@ -37,3 +37,13 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 sudo adduser $USER docker
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.25.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+
+sudo minikube start --vm-driver=none
+
+sudo mv /root/.kube $HOME/.kube # this will write over any previous configuration
+sudo chown -R $USER $HOME/.kube
+sudo chgrp -R $USER $HOME/.kube
+
+sudo mv /root/.minikube $HOME/.minikube # this will write over any previous configuration
+sudo chown -R $USER $HOME/.minikube
+sudo chgrp -R $USER $HOME/.minikube
