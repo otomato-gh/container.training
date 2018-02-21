@@ -254,6 +254,94 @@ The second command will fail and time out after 3 seconds.
 
 ---
 
+## Network policies
+
+- Let's verify that we can access our 'redis' service from our 'hasher' pod
+
+.exercise[
+
+- Run shell inside the hasher pod
+  ```bash
+  #get the name of the hasher pod
+  kubectl get pod -l run=hasher
+  kubectl exec -it <hasher-pod-name> sh
+  \#inside the pod:
+    nc redis 6379
+    PING
+  ```
+  ]
+  you should get:
+  ```bash
+    +PONG
+  ```
+  which means redis is answering
+---
+
+## Restricting Access
+
+- But 'hasher' shouldn't be accessing the db! Only 'worker' should be allowed to do this! 
+
+- Let's define our first network policy:
+
+.exercise[
+
+ - Create a file 'redis-access-nwp.yaml' with the following content:
+]
+.small[
+```yaml
+  kind: NetworkPolicy                
+  apiVersion: networking.k8s.io/v1                                                                         
+  metadata:
+    name: access-redis
+  spec:
+    podSelector:
+      matchLabels:
+          run: redis
+      ingress:
+      - from:
+        - podSelector:
+            matchLabels: 
+              accessRedis: true
+```]
+
+---
+
+## Restricting Access
+
+.exercise[
+
+- Deploy the network policy to the default namespace:
+  ```bash
+  kubectl create -f redis-access-nwp.yaml
+  \# and now let's see if the hasher can still access redis
+  kubectl exec -it <hasher-pod-name> sh
+  \#inside the pod:
+    nc redis 6379
+    PING
+  ```
+  ]
+- You should get no answer
+
+- But is our mining app still working?
+
+---
+
+## Granting Access
+
+.exercise[
+
+- Access permission is granted by pod label `accessRedis` with value `true`
+
+- Let's label our worker pod accordingly:
+
+  ```bash
+  kubectl label pod -l run=worker accessRedis=true
+  ```
+  ]
+- Is the app working now?
+
+---
+
 ## An important warning
 
 - Some network plugins only have partial support for network policies

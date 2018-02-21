@@ -20,6 +20,20 @@
 
 ---
 
+class: extra-details
+
+## Extra details
+
+- This slide should have a little magnifying glass in the top left corner
+
+  (If it doesn't, it's because CSS is hard)
+
+- Slides with that magnifying glass indicate slides providing extra details
+
+- Feel free to skip them if you're in a hurry!
+
+---
+
 class: title
 
 *Tell me and I forget.*
@@ -62,33 +76,110 @@ class: in-person
 
 ---
 
-class: in-person, pic
+class: in-person
 
-![You get a cluster](images/you-get-a-cluster.jpg)
+## Use single-node minikube on Ubuntu on EC2
+
+In your lab environment in Strigo:
+.exercise[
+- Clone the training repository:
+  ```bash
+  git clone https://github.com/otomato-gh/container.training.git
+  ```
+- Run the setup scripts
+  ```bash
+  cd container.training
+  ./prepare-vms/setup_minikube_sn_ub1710.sh
+  ```
+]
 
 ---
 
 class: in-person
 
-## You get a cluster of cloud VMs
+## Use single-node minikube on Ubuntu on EC2
 
-- Each person gets a private cluster of cloud VMs (not shared with anybody else)
-
-- They'll remain up for the duration of the workshop
-
-- You should have a little card with login+password+IP addresses
-
-- You can automatically SSH from one VM to another
-
-- The nodes have aliases: `node1`, `node2`, etc.
+In your lab environment in Strigo:
+.exercise[
+- Enter new shell for docker permissions to kick in:
+  ```bash
+  sudo su - $USER
+  ```
+- Check minikube is up:
+  ```bash
+  kubectl get nodes
+  ```
+- This installed docker, minikube and kubectl
+]
 
 ---
 
+class: in-person
+
+## Day2 - set up 2 node cluster with kubeadm
+
+In your lab environment in Strigo (node1 and node2):
+.exercise[
+
+- Clone the training repository:
+  ```bash
+  git clone https://github.com/otomato-gh/container.training.git
+  ```
+- Run the setup scripts
+  ```bash
+  cd container.training
+  ./prepare-vms/setup_kubeadm.sh
+  ```
+]
+---
+class: in-person
+
+## Day2 - set up 2 node cluster with kubeadm
+
+In your lab environment in Strigo (node1 only):
+.exercise[
+- Setup master on node1:
+  ```bash
+  sudo kubeadm init
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  ```
+- Deploy Weave pod network
+  ```bash
+  sudo su - $USER
+  sysctl net.bridge.bridge-nf-call-iptables=1
+  export kubever=$(kubectl version | base64 | tr -d '\n')
+  kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
+  ```
+- Copy the 'kubeadm join' command
+]
+---
+class: in-person
+
+## Day2 - set up 2 node cluster with kubeadm
+
+In your lab environment in Strigo (node2 only):
+.exercise[
+
+- rub kubeadm join command:
+  ```bash
+  sudo kubeadm join --token ...
+  ```
+- Back on node1:
+  ```bash
+  kubectl get nodes -w
+  #allow pods to be scheduled on master node
+  kubectl taint nodes --all node-role.kubernetes.io/master-
+  ```
+]
+
+---
 class: in-person
 
 ## Why don't we run containers locally?
 
-- Installing this stuff can be hard on some machines
+- Installing that stuff can be hard on some machines
 
   (32 bits CPU or OS... Laptops without administrator access... etc.)
 
@@ -101,69 +192,68 @@ class: in-person
 
   - a web browser
 
-  - an SSH client
+---
+
+## Doing or re-doing the workshop on your own?
+
+- Use something like
+  [Play-With-Docker](http://play-with-docker.com/) or
+  [Play-With-Kubernetes](https://training.play-with-kubernetes.com/)
+
+  Zero setup effort; but environment are short-lived and
+  might have limited resources
+
+- Create your own cluster (local or cloud VMs)
+
+  Small setup effort; small cost; flexible environments
+
+- Create a bunch of clusters for you and your friends
+    ([instructions](https://@@GITREPO@@/tree/master/prepare-vms))
+
+  Bigger setup effort; ideal for group training
 
 ---
 
-class: in-person
+class: self-paced
 
-## SSH clients
+## Get your own Docker nodes
 
-- On Linux, OS X, FreeBSD... you are probably all set
+- If you already have some Docker nodes: great!
 
-- On Windows, get one of these:
+- If not: let's get some thanks to Play-With-Docker
 
-  - [putty](http://www.putty.org/)
-  - Microsoft [Win32 OpenSSH](https://github.com/PowerShell/Win32-OpenSSH/wiki/Install-Win32-OpenSSH)
-  - [Git BASH](https://git-for-windows.github.io/)
-  - [MobaXterm](http://mobaxterm.mobatek.net/)
+.exercise[
 
-- On Android, [JuiceSSH](https://juicessh.com/)
-  ([Play Store](https://play.google.com/store/apps/details?id=com.sonelli.juicessh))
-  works pretty well
+- Go to http://www.play-with-docker.com/
 
-- Nice-to-have: [Mosh](https://mosh.org/) instead of SSH, if your internet connection tends to lose packets
+- Log in
 
----
+- Create your first node
 
-class: in-person, extra-details
+<!-- ```open http://www.play-with-docker.com/``` -->
 
-## What is this Mosh thing?
+]
 
-*You don't have to use Mosh or even know about it to follow along.
-<br/>
-We're just telling you about it because some of us think it's cool!*
+You will need a Docker ID to use Play-With-Docker.
 
-- Mosh is "the mobile shell"
-
-- It is essentially SSH over UDP, with roaming features
-
-- It retransmits packets quickly, so it works great even on lossy connections
-
-  (Like hotel or conference WiFi)
-
-- It has intelligent local echo, so it works great even in high-latency connections
-
-  (Like hotel or conference WiFi)
-
-- It supports transparent roaming when your client IP address changes
-
-  (Like when you hop from hotel to conference WiFi)
+(Creating a Docker ID is free.)
 
 ---
 
-class: in-person, extra-details
+## We will (mostly) interact with node1 only
 
-## Using Mosh
+*These remarks apply only when using multiple nodes, of course.*
 
-- To install it: `(apt|yum|brew) install mosh`
+- Unless instructed, **all commands must be run from the first VM, `node1`**
 
-- It has been pre-installed on the VMs that we are using
+- We will only checkout/copy the code on `node1`
 
-- To connect to a remote machine: `mosh user@host`
+- During normal operations, we do not need access to the other nodes
 
-  (It is going to establish an SSH connection, then hand off to UDP)
+- If we had to troubleshoot issues, we would use a combination of:
 
-- It requires UDP ports to be open
+  - SSH (to access system logs, daemon status...)
 
-  (By default, it uses a UDP port between 60000 and 61000)
+  - Docker API (to check running containers and container engine status)
+
+  - Kubernetes API (via kubectl - to check the state of Kubernetes resources) 

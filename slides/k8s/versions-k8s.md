@@ -1,10 +1,9 @@
-## Versions installed
+## Brand new versions!
 
 - Kubernetes 1.18.0
 - Docker Engine 19.03.8
 - Docker Compose 1.25.4
 
-<!-- ##VERSION## -->
 
 .exercise[
 
@@ -39,9 +38,7 @@ class: extra-details
 
 class: extra-details
 
-- No!
-
-- "Validates" = continuous integration builds with very extensive (and expensive) testing
+- "Validates" = continuous integration builds
 
 - The Docker API is versioned, and offers strong backward-compatibility
   <br/>

@@ -5,7 +5,11 @@ metadata:
 spec:
   podSelector:
     matchLabels:
+<<<<<<< HEAD
       app: testweb
+=======
+      run: testweb
+>>>>>>> Otomato version
   ingress:
   - from:
     - podSelector:

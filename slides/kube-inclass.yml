@@ -1,0 +1,46 @@
+title: |
+  Deploying and Scaling Microservices
+  with Docker and Kubernetes
+
+chat: "[Slack](https://join.slack.com/t/otomato-flux/shared_invite/enQtMzE5NjY1Njk4MzM5LWRkNmI5NGI5YjY0MWVlNjA0ZjdkMjRiMjlkZDY5ZTI4NGE3MWQ1M2E0ZTJlNjA2YTQ4ZjdmNTA4ZjRmODY1ZjY)"
+#chat: "[Gitter](https://gitter.im/jpetazzo/workshop-yyyymmdd-city)"
+
+gitrepo: github.com/otomato-gh/container.training
+
+slides: https://devopstrain.pro/k8s
+
+exclude:
+- self-paced
+
+chapters:
+- shared/title.md
+- logistics.md
+- k8s/intro.md
+- shared/toc.md
+- - shared/prereqs.md
+  - k8s/versions-k8s.md
+  - common/microservices.md
+  - common/sampleapp.md
+- - k8s/concepts-k8s.md
+  - shared/declarative.md
+  - k8s/declarative.md
+  - k8s/kubenet.md
+  - k8s/kubectlget.md
+  - k8s/setup-k8s.md
+  - k8s/kubectlrun.md
+- - k8s/kubectlexpose.md
+  - k8s/ourapponkube.md
+  - k8s/kubectlproxy.md
+  - k8s/dashboard.md
+- - k8s/kubectlscale.md
+  - k8s/daemonset.md
+- - k8s/rollout.md
+  - k8s/healthchecks.md
+  - k8s/logs-cli.md
+- - k8s/helm.md
+  - k8s/namespaces.md  
+  - k8s/netpol.md
+  - k8s/volumes.md
+  - k8s/configuration.md
+- - k8s/whatsnext.md
+  - k8s/links.md

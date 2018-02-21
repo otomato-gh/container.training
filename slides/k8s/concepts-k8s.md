@@ -1,6 +1,6 @@
 # Kubernetes concepts
 
-- Kubernetes is a container management system
+- Kubernetes is a container management and orchestration system
 
 - It runs and manages containerized applications on a cluster
 

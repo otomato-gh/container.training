@@ -9,7 +9,7 @@
 
 - We included as much information as possible in these slides
 
-- We recommend having a mentor to help you ...
+- It's recommended having a mentor to help you ...
 
 - ... Or be comfortable spending some time reading the Docker
  [documentation](https://docs.docker.com/) ...
@@ -38,3 +38,34 @@ class: self-paced
 
 - If you are doing this on your own:
   <br/>the first chapter will give you various options to get your own cluster
+
+---
+
+## About these slides
+
+- All the content is available in a public GitHub repository:
+
+  https://github.com/otomato-gh/container.training
+
+- You can get updated "builds" of the slides there:
+
+  http://www.devopstrain.pro/k8s
+
+<!--
+.exercise[
+```open https://github.com/otomato-gh/container.training```
+```open http://container.training/```
+]
+-->
+
+--
+
+- Typos? Mistakes? Questions? Feel free to hover over the bottom of the slide ...
+
+.footnote[.emoji[👇] Try it! The source file will be shown and you can view it on GitHub and fork and edit it.]
+
+<!--
+.exercise[
+```open https://github.com/otomato-gh/container.training/tree/master/slides/common/intro.md```
+]
+-->

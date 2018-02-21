@@ -78,7 +78,11 @@ First step: clone the source code for the app we will be working on.
 
 ```bash
 $ cd
+<<<<<<< HEAD:slides/containers/Compose_For_Dev_Stacks.md
 $ git clone https://github.com/jpetazzo/trainingwheels
+=======
+$ git clone git://github.com/otomato-gh/trainingwheels
+>>>>>>> Otomato version:slides/intro/Compose_For_Dev_Stacks.md
 ...
 $ cd trainingwheels
 ```

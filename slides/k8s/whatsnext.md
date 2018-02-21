@@ -59,21 +59,21 @@ And *then* it is time to look at orchestration!
 
 ## Namespaces
 
-- Namespaces let you run multiple identical stacks side by side
+- Yes, it is possible to have prod+dev in a single cluster
 
-- Two namespaces (e.g. `blue` and `green`) can each have their own `redis` service
+  (and implement good isolation and security with RBAC, network policies...)
 
-- Each of the two `redis` services has its own `ClusterIP`
+- But it is not a good idea to do that for our first deployment
 
 - CoreDNS creates two entries, mapping to these two `ClusterIP` addresses:
 
-  `redis.blue.svc.cluster.local` and `redis.green.svc.cluster.local`
+- Implement and check RBAC and isolation on the test cluster
 
-- Pods in the `blue` namespace get a *search suffix* of `blue.svc.cluster.local`
+  (e.g. deploy multiple test versions side-by-side)
 
-- As a result, resolving `redis` from a pod in the `blue` namespace yields the "local" `redis`
+- Make sure that all our devs have usable dev clusters
 
-.warning[This does not provide *isolation*! That would be the job of network policies.]
+  (whether it's a local minikube or a full-blown multi-node cluster)
 
 ---
 
@@ -187,27 +187,21 @@ And *then* it is time to look at orchestration!
 
   (but is being [deprecated](https://github.com/kubernetes/heapster/blob/master/docs/deprecation.md) starting with Kubernetes 1.11)
 
+- Log shipping to a central platform is usually done through these files
+
+  (e.g. with an agent bind-mounting the log directory)
+
 ---
 
-## Managing the configuration of our applications
+## Metrics
 
-- Two constructs are particularly useful: secrets and config maps
-
-- They allow to expose arbitrary information to our containers
-
-- **Avoid** storing configuration in container images
-
-  (There are some exceptions to that rule, but it's generally a Bad Idea)
-
-- **Never** store sensitive information in container images
-
-  (It's the container equivalent of the password on a post-it note on your screen)
+- The kubelet embeds [cAdvisor](https://github.com/google/cadvisor), which exposes container metrics
 
 - [This section](kube-selfpaced.yml.html#toc-managing-configuration) shows how to manage app config with config maps (among others)
 
 ---
 
-## Managing stack deployments
+- It is a good idea to start with [Prometheus](https://prometheus.io/)
 
 - Applications are made of many resources
 
@@ -216,6 +210,11 @@ And *then* it is time to look at orchestration!
 - We need to automate the creation / update / management of these resources
 
 - There is no "absolute best" tool or method; it depends on:
+  (even if you end up using something else)
+
+- Starting from Kubernetes 1.8, we can use the [Metrics API](https://kubernetes.io/docs/tasks/debug-application-cluster/core-metrics-pipeline/)
+
+- [Heapster](https://github.com/kubernetes/heapster) was a popular add-on
 
   - the size and complexity of our stack(s)
   - how often we change it (i.e. add/remove components)
@@ -243,19 +242,19 @@ And *then* it is time to look at orchestration!
 
 ---
 
-## Cluster federation
+## Managing the configuration of our applications
 
---
+- Two constructs are particularly useful: secrets and config maps
 
-![Star Trek Federation](images/startrek-federation.jpg)
+- They allow to expose arbitrary information to our containers
 
---
+- **Avoid** storing configuration in container images
 
-Sorry Star Trek fans, this is not the federation you're looking for!
+  (There are some exceptions to that rule, but it's generally a Bad Idea)
 
---
+- **Never** store sensitive information in container images
 
-(If I add "Your cluster is in another federation" I might get a 3rd fandom wincing!)
+  (It's the container equivalent of the password on a post-it note on your screen)
 
 ---
 

@@ -7,6 +7,8 @@
   - how do we look up the IP address of the pod(s)?
 
   - how do we connect from outside the cluster?
+  
+- Once a service is created, `kube-dns` will allow us to resolve it by name
 
   - how do we load balance traffic?
 
@@ -100,6 +102,9 @@
   "load balancer as a service"
 
 - Each service of that type will typically cost a little bit of money
+  - an external load balancer is allocated for the service
+  - the load balancer is configured accordingly
+    <br/>(e.g.: a `NodePort` service is created, and the load balancer sends traffic to that port)
 
   (e.g. a few cents per hour on AWS or GCE)
 
@@ -126,6 +131,10 @@
 - Sometimes, it's the only available option for external traffic
 
   (e.g. most clusters deployed with kubeadm or on-premises)
+  - the DNS entry managed by `kube-dns` will just be a `CNAME` to a provided record
+  - no port, no IP address, no nothing else is allocated
+
+The `LoadBalancer` type is currently only available on AWS, Azure, and GCE.
 
 ---
 
@@ -158,26 +167,25 @@
 .exercise[
 
 - In another window, watch the pods (to see when they are created):
+.exercise[
+
+- Start a bunch of ElasticSearch containers:
+  ```bash
+  kubectl run elastic --image=elasticsearch:2 --replicas=7
+  ```
+
+- Watch them being started:
   ```bash
   kubectl get pods -w
   ```
 
-<!--
-```wait NAME```
-```tmux split-pane -h```
--->
-
-- Create a deployment for this very lightweight HTTP server:
-  ```bash
-  kubectl create deployment httpenv --image=jpetazzo/httpenv
-  ```
-
-- Scale it to 10 replicas:
-  ```bash
-  kubectl scale deployment httpenv --replicas=10
-  ```
+<!-- ```keys ^C``` -->
 
 ]
+
+The `-w` option "watches" events happening on the specified resources.
+
+Note: please DO NOT call the service `search`. It would collide with the TLD.
 
 ---
 
@@ -187,14 +195,14 @@
 
 .exercise[
 
-- Expose the HTTP port of our server:
+- Expose the ElasticSearch HTTP API port:
   ```bash
-  kubectl expose deployment httpenv --port 8888
+  kubectl expose deploy/elastic --port 9200
   ```
 
 - Look up which IP address was allocated:
   ```bash
-  kubectl get service
+  kubectl get svc
   ```
 
 ]
@@ -219,13 +227,13 @@
 
 ## Testing our service
 
-- We will now send a few HTTP requests to our pods
+- We will now send a few HTTP requests to our ElasticSearch pods
 
 .exercise[
 
-- Let's obtain the IP address that was allocated for our service, *programmatically:*
+- Let's obtain the IP address that was allocated for our service, *programatically:*
   ```bash
-  IP=$(kubectl get svc httpenv -o go-template --template '{{ .spec.clusterIP }}')
+  IP=$(kubectl get svc elastic -o go-template --template '{{ .spec.clusterIP }}')
   ```
 
 <!--
@@ -236,12 +244,7 @@
 
 - Send a few requests:
   ```bash
-  curl http://$IP:8888/
-  ```
-
-- Too much output? Filter it with `jq`:
-  ```bash
-  curl -s http://$IP:8888/ | jq .HOSTNAME
+  curl http://$IP:9200/
   ```
 
 ]
@@ -448,3 +451,4 @@ class: extra-details
 :FR:- Exposer un service
 :FR:- Différents types de services : ClusterIP, NodePort, LoadBalancer
 :FR:- Utiliser CoreDNS pour la *service discovery*
+Our requests are load balanced across multiple pods.

@@ -11,16 +11,10 @@ class: title, in-person
 @@TITLE@@<br/></br>
 
 .footnote[
-**Slides[:](https://www.youtube.com/watch?v=h16zyxiwDLY) @@SLIDES@@**
+**Based on slides by Jerome Petazzoni**<br/>
+*Presented by Anton Weiss*<br/>
+*Otomato technical training.*<br/>
+*http://otomato.link*
+
+**Slides: http://www.devopstrain.pro/k8s/**
 ]
-
-<!--
-WiFi: **Something**<br/>
-Password: **Something**
-
-**Be kind to the WiFi!**<br/>
-*Use the 5G network.*
-*Don't use your hotspot.*<br/>
-*Don't stream videos or download big files during the workshop*<br/>
-*Thank you!*
--->
