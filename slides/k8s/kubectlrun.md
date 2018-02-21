@@ -20,20 +20,16 @@
 
 .exercise[
 
-- Let's ping `1.1.1.1`, Cloudflare's 
-  [public DNS resolver](https://blog.cloudflare.com/announcing-1111/):
+- Let's ping `goo.gl`:
   ```bash
-  kubectl run pingpong --image alpine ping 1.1.1.1
+  kubectl run pingpong --image alpine ping goo.gl
   ```
-
-<!-- ```hide kubectl wait deploy/pingpong --for condition=available``` -->
 
 ]
 
 --
 
-(Starting with Kubernetes 1.12, we get a message telling us that
-`kubectl run` is deprecated. Let's ignore it for now.)
+OK, what just happened?
 
 ---
 
@@ -53,11 +49,9 @@
 --
 
 We should see the following things:
-- `deployment.apps/pingpong` (the *deployment* that we just created)
-- `replicaset.apps/pingpong-xxxxxxxxxx` (a *replica set* created by the deployment)
-- `pod/pingpong-xxxxxxxxxx-yyyyy` (a *pod* created by the replica set)
-
-Note: as of 1.10.1, resource types are displayed in more detail.
+- `deploy/pingpong` (the *deployment* that we just created)
+- `rs/pingpong-xxxx` (a *replica set* created by the deployment)
+- `po/pingpong-yyyy` (a *pod* created by the replica set)
 
 ---
 
@@ -86,30 +80,19 @@ Note: as of 1.10.1, resource types are displayed in more detail.
 
 ## Our `pingpong` deployment
 
-- `kubectl run` created a *deployment*, `deployment.apps/pingpong`
+- `kubectl run` created a *deployment*, `deploy/pingpong`
 
-```
-NAME                       DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/pingpong   1         1         1            1           10m
-```
+- That deployment created a *replica set*, `rs/pingpong-xxxx`
 
-- That deployment created a *replica set*, `replicaset.apps/pingpong-xxxxxxxxxx`
-
-```
-NAME                                  DESIRED   CURRENT   READY     AGE
-replicaset.apps/pingpong-7c8bbcd9bc   1         1         1         10m
-```
-
-- That replica set created a *pod*, `pod/pingpong-xxxxxxxxxx-yyyyy`
-
-```
-NAME                            READY     STATUS    RESTARTS   AGE
-pod/pingpong-7c8bbcd9bc-6c9qz   1/1       Running   0          10m
-```
+- That replica set created a *pod*, `po/pingpong-yyyy`
 
 - We'll see later how these folks play together for:
 
-  - scaling, high availability, rolling updates
+  - scaling
+
+  - high availability
+
+  - rolling updates
 
 ---
 
@@ -154,8 +137,9 @@ pod/pingpong-7c8bbcd9bc-6c9qz   1/1       Running   0          10m
   ```
 
 <!--
-```wait seq=3```
-```keys ^C```
+```keys
+^C
+```
 -->
 
 ]
@@ -170,17 +154,12 @@ pod/pingpong-7c8bbcd9bc-6c9qz   1/1       Running   0          10m
 
 - Scale our `pingpong` deployment:
   ```bash
-  kubectl scale deploy/pingpong --replicas 3
-  ```
-
-- Note that this command does exactly the same thing:
-  ```bash
-  kubectl scale deployment pingpong --replicas 3
+  kubectl scale deploy/pingpong --replicas 8
   ```
 
 ]
 
-Note: what if we tried to scale `replicaset.apps/pingpong-xxxxxxxxxx`?
+Note: what if we tried to scale `rs/pingpong-xxxx`?
 
 We could! But the *deployment* would notice it right away, and scale back to the initial level.
 
@@ -202,16 +181,14 @@ We could! But the *deployment* would notice it right away, and scale back to the
   ```
 
 <!--
-```wait Running```
-```keys ^C```
-```hide kubectl wait deploy pingpong --for condition=available```
-```keys kubectl delete pod ping```
-```copypaste pong-..........-.....```
+```keys
+^C
+```
 -->
 
 - Destroy a pod:
-  ```
-  kubectl delete pod pingpong-xxxxxxxxxx-yyyyy
+  ```bash
+  kubectl delete pod pingpong-yyyy
   ```
 ]
 
@@ -234,47 +211,6 @@ We could! But the *deployment* would notice it right away, and scale back to the
 
 ---
 
-## What about that deprecation warning?
-
-- As we can see from the previous slide, `kubectl run` can do many things
-
-- The exact type of resource created is not obvious
-
-- To make things more explicit, it is better to use `kubectl create`:
-
-  - `kubectl create deployment` to create a deployment
-
-  - `kubectl create job` to create a job
-
-  - `kubectl create cronjob` to run a job periodically
-    <br/>(since Kubernetes 1.14)
-
-- Eventually, `kubectl run` will be used only to start one-shot pods
-
-  (see https://github.com/kubernetes/kubernetes/pull/68132)
-
----
-
-## Various ways of creating resources
-
-- `kubectl run` 
-
-  - easy way to get started
-  - versatile
-
-- `kubectl create <resource>` 
-
-  - explicit, but lacks some features
-  - can't create a CronJob before Kubernetes 1.14
-  - can't pass command-line arguments to deployments
-
-- `kubectl create -f foo.yaml` or `kubectl apply -f foo.yaml`
-
-  - all features are available
-  - requires writing YAML
-
----
-
 ## Viewing logs of multiple pods
 
 - When we specify a deployment name, only one single pod's logs are shown
@@ -294,123 +230,19 @@ We could! But the *deployment* would notice it right away, and scale back to the
 
 ]
 
----
-
-### Streaming logs of multiple pods
-
-- Can we stream the logs of all our `pingpong` pods?
-
-.exercise[
-
-- Combine `-l` and `-f` flags:
-  ```bash
-  kubectl logs -l run=pingpong --tail 1 -f
-  ```
-
-<!--
-```wait seq=```
-```keys ^C```
--->
-
-]
-
-*Note: combining `-l` and `-f` is only possible since Kubernetes 1.14!*
-
-*Let's try to understand why ...*
+Unfortunately, `--follow` cannot (yet) be used to stream the logs from multiple containers.
 
 ---
 
-### Streaming logs of many pods
+class: title
 
-- Let's see what happens if we try to stream the logs for more than 5 pods
-
-.exercise[
-
-- Scale up our deployment:
-  ```bash
-  kubectl scale deployment pingpong --replicas=8
-  ```
-
-- Stream the logs:
-  ```bash
-  kubectl logs -l run=pingpong --tail 1 -f
-  ```
-
-]
-
-We see a message like the following one:
-```
-error: you are attempting to follow 8 log streams,
-but maximum allowed concurency is 5,
-use --max-log-requests to increase the limit
-```
-
----
-
-## Why can't we stream the logs of many pods?
-
-- `kubectl` opens one connection to the API server per pod
-
-- For each pod, the API server opens one extra connection to the corresponding kubelet
-
-- If there are 1000 pods in our deployment, that's 1000 inbound + 1000 outbound connections on the API server
-
-- This could easily put a lot of stress on the API server
-
-- Prior Kubernetes 1.14, it was decided to *not* allow multiple connections
-
-- From Kubernetes 1.14, it is allowed, but limited to 5 connections
-
-  (this can be changed with `--max-log-requests`)
-
-- For more details about the rationale, see
-  [PR #67573](https://github.com/kubernetes/kubernetes/pull/67573)
-
----
-
-## Shortcomings of `kubectl logs`
-
-- We don't see which pod sent which log line
-
-- If pods are restarted / replaced, the log stream stops
-
-- If new pods are added, we don't see their logs
-
-- To stream the logs of multiple pods, we need to write a selector
-
-- There are external tools to address these shortcomings
-
-  (e.g.: [Stern](https://github.com/wercker/stern))
-
----
-
-class: extra-details
-
-## `kubectl logs -l ... --tail N`
-
-- If we run this with Kubernetes 1.12, the last command shows multiple lines
-
-- This is a regression when `--tail` is used together with `-l`/`--selector`
-
-- It always shows the last 10 lines of output for each container
-
-  (instead of the number of lines specified on the command line)
-
-- The problem was fixed in Kubernetes 1.13
-
-*See [#70554](https://github.com/kubernetes/kubernetes/issues/70554) for details.*
-
----
-
-## Aren't we flooding 1.1.1.1?
-
-- If you're wondering this, good question!
-
-- Don't worry, though:
-
-  *APNIC's research group held the IP addresses 1.1.1.1 and 1.0.0.1. While the addresses were valid, so many people had entered them into various random systems that they were continuously overwhelmed by a flood of garbage traffic. APNIC wanted to study this garbage traffic but any time they'd tried to announce the IPs, the flood would overwhelm any conventional network.*
-
-  (Source: https://blog.cloudflare.com/announcing-1111/)
-
-- It's very unlikely that our concerted pings manage to produce
-  even a modest blip at Cloudflare's NOC!
+Meanwhile,
+<br/>
+at the Google NOC ...
+<br/>
+<br/>
+.small[“Why the hell]
+<br/>
+.small[are we getting 1000 packets per second]
+<br/>
+.small[of ICMP ECHO traffic from EC2 ?!?”]

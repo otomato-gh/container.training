@@ -19,4 +19,4 @@ spec:
       app: webui
   ingress:
   - from: []
-
+  

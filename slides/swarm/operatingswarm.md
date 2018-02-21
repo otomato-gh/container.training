@@ -33,7 +33,11 @@ TOKEN=$(docker swarm join-token -q manager)
 for N in $(seq 2 5); do
   DOCKER_HOST=tcp://node$N:2375 docker swarm join --token $TOKEN node1:2377
 done
+<<<<<<< HEAD
 git clone https://@@GITREPO@@
+=======
+git clone git://github.com/otomato-gh/container.training
+>>>>>>> Otomato version
 cd container.training/stacks
 docker stack deploy --compose-file registry.yml registry
 docker-compose -f dockercoins.yml build

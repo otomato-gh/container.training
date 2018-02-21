@@ -35,14 +35,14 @@ By using Docker containers, we will get a consistent development environment.
 
 * We have to work on some application whose code is at:
 
-  https://github.com/jpetazzo/namer.
+  https://github.com/otomato-gh/namer.
 
 * What is it? We don't know yet!
 
 * Let's download the code.
 
 ```bash
-$ git clone https://github.com/jpetazzo/namer
+$ git clone https://github.com/otomato-gh/namer
 ```
 
 ---

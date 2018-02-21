@@ -1,12 +1,12 @@
 # Setting up Kubernetes
 
-- How did we set up these Kubernetes clusters that we're using?
+- How can we set up these Kubernetes clusters by ourselves?
 
 --
 
 <!-- ##VERSION## -->
 
-- We used `kubeadm` on freshly installed VM instances running Ubuntu LTS
+- We can use kubeadm on VMs or physical servers:
 
     1. Install Docker
 
@@ -38,9 +38,6 @@
 
   (At least ... not yet! Though it's [experimental in 1.12](https://kubernetes.io/docs/setup/independent/high-availability/).)
 
---
-
-- "It's still twice as many steps as setting up a Swarm cluster 😕" -- Jérôme
 
 ---
 

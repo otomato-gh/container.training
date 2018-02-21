@@ -17,4 +17,4 @@ Everything else:
 
 - [Local meetups](https://www.meetup.com/)
 
-.footnote[These slides (and future updates) are on → http://container.training/]
+.footnote[These slides (and future updates) are on → http://devopstrain.pro/k8s/]

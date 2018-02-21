@@ -90,9 +90,15 @@ class: extra-details
 ## Setting up an automated build
 
 * We need a Dockerized repository!
+<<<<<<< HEAD:slides/containers/Publishing_To_Docker_Hub.md
 * Let's go to https://github.com/jpetazzo/trainingwheels and fork it.
 * Go to the Docker Hub (https://hub.docker.com/) and sign-in. Select "Repositories" in the blue navigation menu.
 * Select "Create" in the top-right bar, and select "Create Repository+".
+=======
+* Let's go to https://github.com/otomato-gh/trainingwheels and fork it.
+* Go to the Docker Hub (https://hub.docker.com/).
+* Select "Create" in the top-right bar, and select "Create Automated Build."
+>>>>>>> Otomato version:slides/intro/Publishing_To_Docker_Hub.md
 * Connect your Docker Hub account to your GitHub account.
 * Click "Create" button.
 * Then go to "Builds" folder.

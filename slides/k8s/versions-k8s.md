@@ -1,10 +1,9 @@
-## Versions installed
+## Brand new versions!
 
-- Kubernetes 1.14.1
-- Docker Engine 18.09.5
-- Docker Compose 1.21.1
+- Kubernetes 1.12
+- Docker Engine 18.12
+- Docker Compose 1.19
 
-<!-- ##VERSION## -->
 
 .exercise[
 
@@ -23,21 +22,19 @@ class: extra-details
 
 ## Kubernetes and Docker compatibility
 
-- Kubernetes 1.14 validates Docker Engine versions [up to 18.09](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.14.md#external-dependencies)
-  <br/>
-  (the latest version when Kubernetes 1.14 was released)
-
-- Kubernetes 1.13 only validates Docker Engine versions [up to 18.06](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.13.md#external-dependencies)
-
-- Is this a problem if I use Kubernetes with a "too recent" Docker Engine?
+- Kubernetes only validates Docker Engine versions 1.11.2, 1.12.6, 1.13.1, and 17.03.2
 
 --
 
 class: extra-details
 
-- No!
+- Are we living dangerously?
 
-- "Validates" = continuous integration builds with very extensive (and expensive) testing
+--
+
+class: extra-details
+
+- "Validates" = continuous integration builds
 
 - The Docker API is versioned, and offers strong backward-compatibility
 
