@@ -11,11 +11,10 @@ class: title, in-person
 @@TITLE@@<br/></br>
 
 .footnote[
-**Be kind to the WiFi!**<br/>
-<!-- *Use the 5G network.* -->
-*Don't use your hotspot.*<br/>
-*Don't stream videos or download big files during the workshop.*<br/>
-*Thank you!*
+**Based on slides by Jerome Petazzoni**<br/>
+*Presented by Anton Weiss*<br/>
+*Otomato technical training.*<br/>
+*http://otomato.link*
 
-**Slides: http://container.training/**
+**Slides: http://www.devopstrain.pro/k8s/**
 ]

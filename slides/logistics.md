@@ -1,16 +1,10 @@
 ## Intros
 
- - Hello! We are:
+ - Hello! I am:
 
-   - .emoji[👷🏻‍♀️] AJ ([@s0ulshake](https://twitter.com/s0ulshake), Travis CI)
+   - Ant Weiss ([@antweiss](https://twitter.com/antweiss), Otomato Software Delivery.)
 
-   - .emoji[🐳] Jérôme ([@jpetazzo](https://twitter.com/jpetazzo), Docker Inc.)
-
-- The workshop will run from 9am to 4pm
-
-- There will be a lunch break at noon
-
-  (And coffee breaks!)
+- This is a 2 day workshop
 
 - Feel free to interrupt for questions at any time
 

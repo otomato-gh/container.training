@@ -1,8 +1,8 @@
 ## Brand new versions!
 
-- Kubernetes 1.8
-- Docker Engine 17.11
-- Docker Compose 1.17
+- Kubernetes 1.9
+- Docker Engine 17.12
+- Docker Compose 1.19
 
 
 .exercise[

@@ -1,10 +1,10 @@
 # Setting up Kubernetes
 
-- How did we set up these Kubernetes clusters that we're using?
+- How can we set up these Kubernetes clusters by ourselves?
 
 --
 
-- We used `kubeadm` on "fresh" EC2 instances with Ubuntu 16.04 LTS
+- We can use `kubeadm` on VMs or physical servers
 
     1. Install Docker
 
@@ -12,7 +12,7 @@
 
     3. Run `kubeadm init` on the master node
 
-    4. Set up Weave (the overlay network)
+    4. Set up Weave (the overlay network) or another networking solution
        <br/>
        (that step is just one `kubectl apply` command; discussed later)
 
@@ -34,28 +34,25 @@
 
 - Doesn't set up multi-master (no high availability)
 
---
-
-- It's still twice as many steps as setting up a Swarm cluster 😕
-
 ---
 
 ## Other deployment options
 
-- If you are on Google Cloud:
-  [GKE](https://cloud.google.com/container-engine/)
+- If you are on Azure:
+  [AKS](https://azure.microsoft.com/services/container-service/)
 
-  Empirically the best Kubernetes deployment out there
+- If you are on Google Cloud:
+  [GKE](https://cloud.google.com/kubernetes-engine/)
+
+  That's what we will be using!
 
 - If you are on AWS:
-  [kops](https://github.com/kubernetes/kops)
-
-  ... But with AWS re:invent just around the corner, expect some changes
+  [EKS](https://aws.amazon.com/eks/)
 
 - On a local machine:
   [minikube](https://kubernetes.io/docs/getting-started-guides/minikube/),
   [kubespawn](https://github.com/kinvolk/kube-spawn),
-  [Docker4Mac (coming soon)](https://beta.docker.com/)
+  [Docker4Mac](https://docs.docker.com/docker-for-mac/kubernetes/)
 
 - If you want something customizable:
   [kubicorn](https://github.com/kris-nova/kubicorn)

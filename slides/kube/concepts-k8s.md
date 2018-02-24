@@ -1,6 +1,6 @@
 # Kubernetes concepts
 
-- Kubernetes is a container management system
+- Kubernetes is a container management and orchestration system
 
 - It runs and manages containerized applications on a cluster
 
@@ -130,7 +130,7 @@ class: pic
 
 - It is customary to *not* run apps on the node(s) running master components
 
-  (Except when using small development clusters) 
+  (Except when using small development clusters)
 
 ---
 
@@ -201,7 +201,7 @@ Yes!
   - service (stable network endpoint to connect to one or multiple containers)
   - namespace (more-or-less isolated group of things)
   - secret (bundle of sensitive data to be passed to a container)
- 
+
   And much more! (We can see the full list by running `kubectl get`)
 
 ---

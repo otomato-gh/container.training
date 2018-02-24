@@ -2,19 +2,20 @@ title: |
   Deploying and Scaling Microservices
   with Docker and Kubernetes
 
-chat: "[Slack](https://cicdworkshop.slack.com/messages/C36LTPLE7)"
+chat: "[Slack](https://join.slack.com/t/otomato-flux/shared_invite/enQtMzE5NjY1Njk4MzM5LWRkNmI5NGI5YjY0MWVlNjA0ZjdkMjRiMjlkZDY5ZTI4NGE3MWQ1M2E0ZTJlNjA2YTQ4ZjdmNTA4ZjRmODY1ZjY)"
 #chat: "[Gitter](https://gitter.im/jpetazzo/workshop-yyyymmdd-city)"
 
 exclude:
-- in-person
+- self-paced
 
 chapters:
 - common/title.md
-#- logistics.md
+- logistics.md
 - common/intro.md
 - common/toc.md
 - - common/prereqs.md
   - kube/versions-k8s.md
+  - common/microservices.md
   - common/sampleapp.md
 - - kube/concepts-k8s.md
   - common/declarative.md

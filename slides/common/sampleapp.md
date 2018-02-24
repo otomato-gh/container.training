@@ -1,16 +1,16 @@
 # Our sample application
 
 - Visit the GitHub repository with all the materials of this workshop:
-  <br/>https://github.com/jpetazzo/container.training
+  <br/>https://github.com/otomato_gh/container.training
 
 - The application is in the [dockercoins](
-  https://github.com/jpetazzo/container.training/tree/master/dockercoins)
+  https://github.com/otomato_gh/container.training/tree/master/dockercoins)
   subdirectory
 
 - Let's look at the general layout of the source code:
 
   there is a Compose file [docker-compose.yml](
-  https://github.com/jpetazzo/container.training/blob/master/dockercoins/docker-compose.yml) ...
+  https://github.com/otomato_gh/container.training/blob/master/dockercoins/docker-compose.yml) ...
 
   ... and 4 other services, each in its own directory:
 
@@ -21,25 +21,7 @@
 
 ---
 
-class: extra-details
-
-## Compose file format version
-
-*Particularly relevant if you have used Compose before...*
-
-- Compose 1.6 introduced support for a new Compose file format (aka "v2")
-
-- Services are no longer at the top level, but under a `services` section
-
-- There has to be a `version` key at the top level, with value `"2"` (as a string, not an integer)
-
-- Containers are placed on a dedicated network, making links unnecessary
-
-- There are other minor differences, but upgrade is easy and straightforward
-
----
-
-## Links, naming, and service discovery
+## Compose file: links, naming, and service discovery
 
 - Containers can have network aliases (resolvable through DNS)
 
@@ -75,7 +57,7 @@ def hash_bytes(data):
 ```
 
 (Full source code available [here](
-https://github.com/jpetazzo/container.training/blob/8279a3bce9398f7c1a53bdd95187c53eda4e6435/dockercoins/worker/worker.py#L17
+https://github.com/otomato_gh/container.training/blob/8279a3bce9398f7c1a53bdd95187c53eda4e6435/dockercoins/worker/worker.py#L17
 ))
 
 ---
@@ -94,7 +76,7 @@ https://github.com/jpetazzo/container.training/blob/8279a3bce9398f7c1a53bdd95187
 
 - How DockerCoins works:
 
-  - `worker` asks to `rng` to generate a few random bytes
+  - `worker` asks `rng` to generate a few random bytes
 
   - `worker` feeds these bytes into `hasher`
 
@@ -108,9 +90,9 @@ https://github.com/jpetazzo/container.training/blob/8279a3bce9398f7c1a53bdd95187
 
 ## Getting the application source code
 
-- We will clone the GitHub repository
+- We will clone the GitHub repository (but hey, we already did that!)
 
-- The repository also contains scripts and tools that we will use through the workshop
+- The repository also contains scripts and tools that we will use throughout the workshop
 
 .exercise[
 
@@ -124,7 +106,7 @@ fi
 
 - Clone the repository on `node1`:
   ```bash
-  git clone git://github.com/jpetazzo/container.training
+  git clone git://github.com/otomato_gh/container.training
   ```
 
 ]
@@ -260,11 +242,11 @@ class: extra-details
 
 .exercise[
 
+- Find the IP address of `node1`
+
 - With a web browser, connect to `node1` on port 8000
 
-- Remember: the `nodeX` aliases are valid only on the nodes themselves
-
-- In your browser, you need to enter the IP address of your node
+- E.g  http://`<IP address of your node>`:8000
 
 <!-- ```open http://node1:8000``` -->
 

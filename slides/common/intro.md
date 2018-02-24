@@ -1,13 +1,13 @@
 ## A brief introduction
 
-- This was initially written to support in-person,
+- This was initially written by Jerome Petazzoni to support in-person,
   instructor-led workshops and tutorials
 
 - You can also follow along on your own, at your own pace
 
 - We included as much information as possible in these slides
 
-- We recommend having a mentor to help you ...
+- It's recommended having a mentor to help you ...
 
 - ... Or be comfortable spending some time reading the Docker
  [documentation](https://docs.docker.com/) ...
@@ -43,15 +43,15 @@ class: self-paced
 
 - All the content is available in a public GitHub repository:
 
-  https://github.com/jpetazzo/container.training
+  https://github.com/otomato_gh/container.training
 
 - You can get updated "builds" of the slides there:
 
-  http://container.training/
+  http://www.devopstrain.pro/k8s
 
 <!--
 .exercise[
-```open https://github.com/jpetazzo/container.training```
+```open https://github.com/otomato_gh/container.training```
 ```open http://container.training/```
 ]
 -->
@@ -64,6 +64,6 @@ class: self-paced
 
 <!--
 .exercise[
-```open https://github.com/jpetazzo/container.training/tree/master/slides/common/intro.md```
+```open https://github.com/otomato_gh/container.training/tree/master/slides/common/intro.md```
 ]
 -->
