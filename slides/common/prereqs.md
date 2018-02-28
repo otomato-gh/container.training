@@ -118,23 +118,62 @@ In your lab environment in Strigo:
 
 class: in-person
 
-## Day2 - sign up for Google Cloud Platform and create a Client VM
+## Day2 - set up 2 node cluster with kubeadm
 
-- Create a new project ‘k8s-ws’
-- Click on the menu button in the top left corner
-- Choose ‘Compute Engine’
-- Create instance
-- Name: node1
-- Change boot disk:
-  - Choose ‘Ubuntu 17.10’
-  - Change disk size to 30 GB
-- Important: Allow full access to all Cloud APIs
-- Allow http and https traffic
-- Start the instance
-- When it’s running - open ssh terminal in browser
+In your lab environment in Strigo (node1 and node2):
+.exercise[
+
+- Clone the training repository:
+  ```bash
+  git clone https://github.com/otomato-gh/container.training.git
+  ```
+- Run the setup scripts
+  ```bash
+  cd container.training
+  ./prepare-vms/setup_kubeadm.sh
+  ```
+]
+---
+class: in-person
+
+## Day2 - set up 2 node cluster with kubeadm
+
+In your lab environment in Strigo (node1 only):
+.exercise[
+
+- Setup master on node1:
+  ```bash
+  sudo kubeadm init
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  ```
+- Deploy Romana pod network
+  ```bash
+  sudo su - $USER
+  kubectl apply -f https://raw.githubusercontent.com/romana/romana/master/containerize/specs/romana-kubeadm.yml
+  ```
+- Copy the 'kubeadm join' command
+]
+---
+class: in-person
+
+## Day2 - set up 2 node cluster with kubeadm
+
+In your lab environment in Strigo (node2 only):
+.exercise[
+
+- rub kubeadm join command:
+  ```bash
+  sudo kubeadm join --token ...
+  ```
+- Back on node1:
+  ```bash
+  kubectl get nodes -w
+  ```
+]
 
 ---
-
 class: in-person
 
 ## Why don't we run containers locally?
