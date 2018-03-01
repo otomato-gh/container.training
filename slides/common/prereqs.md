@@ -140,7 +140,6 @@ class: in-person
 
 In your lab environment in Strigo (node1 only):
 .exercise[
-
 - Setup master on node1:
   ```bash
   sudo kubeadm init
@@ -148,10 +147,12 @@ In your lab environment in Strigo (node1 only):
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
   ```
-- Deploy Romana pod network
+- Deploy Weave pod network
   ```bash
   sudo su - $USER
-  kubectl apply -f https://raw.githubusercontent.com/romana/romana/master/containerize/specs/romana-kubeadm.yml
+  sysctl net.bridge.bridge-nf-call-iptables=1
+  export kubever=$(kubectl version | base64 | tr -d '\n')
+  kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
   ```
 - Copy the 'kubeadm join' command
 ]
@@ -170,6 +171,8 @@ In your lab environment in Strigo (node2 only):
 - Back on node1:
   ```bash
   kubectl get nodes -w
+  #allow pods to be scheduled on master node
+  kubectl taint nodes --all node-role.kubernetes.io/master-
   ```
 ]
 
