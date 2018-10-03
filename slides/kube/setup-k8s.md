@@ -47,7 +47,7 @@
   That's what we will be using!
 
 - If you are on AWS:
-  [EKS](https://aws.amazon.com/eks/)
+  [KOPS](https://github.com/kubernetes/kops) or [EKS](https://aws.amazon.com/eks/) (currently only in US AZs)
 
 - On a local machine:
   [minikube](https://kubernetes.io/docs/getting-started-guides/minikube/),

@@ -76,7 +76,7 @@
   ```
 
 ]
-
+.footnote[You may need to install `jq` by running `apt install jq`]
 ---
 
 ## What's available?

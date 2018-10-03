@@ -17,7 +17,7 @@
 
 The Docker Compose file here is used to build a image with all the dependencies to run the `./workshopctl` commands and optional tools. Each run of the script will check if you have those dependencies locally on your host, and will only use the container if you're [missing a dependency](workshopctl#L5).
 
-    $ git clone https://github.com/otomato_gh/orchestration-workshop.git
+    $ git clone https://github.com/otomato-gh/orchestration-workshop.git
     $ cd orchestration-workshop/prepare-vms
     $ docker-compose build
 

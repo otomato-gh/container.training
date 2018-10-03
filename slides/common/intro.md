@@ -43,7 +43,7 @@ class: self-paced
 
 - All the content is available in a public GitHub repository:
 
-  https://github.com/otomato_gh/container.training
+  https://github.com/otomato-gh/container.training
 
 - You can get updated "builds" of the slides there:
 
@@ -51,7 +51,7 @@ class: self-paced
 
 <!--
 .exercise[
-```open https://github.com/otomato_gh/container.training```
+```open https://github.com/otomato-gh/container.training```
 ```open http://container.training/```
 ]
 -->
@@ -64,6 +64,6 @@ class: self-paced
 
 <!--
 .exercise[
-```open https://github.com/otomato_gh/container.training/tree/master/slides/common/intro.md```
+```open https://github.com/otomato-gh/container.training/tree/master/slides/common/intro.md```
 ]
 -->

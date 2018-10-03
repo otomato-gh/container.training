@@ -210,7 +210,7 @@ class: in-person
   Small setup effort; small cost; flexible environments
 
 - Create a bunch of clusters for you and your friends
-    ([instructions](https://github.com/otomato_gh/container.training/tree/master/prepare-vms))
+    ([instructions](https://github.com/otomato-gh/container.training/tree/master/prepare-vms))
 
   Bigger setup effort; ideal for group training
 
@@ -257,3 +257,5 @@ You will need a Docker ID to use Play-With-Docker.
   - SSH (to access system logs, daemon status...)
 
   - Docker API (to check running containers and container engine status)
+
+  - Kubernetes API (via kubectl - to check the state of Kubernetes resources) 

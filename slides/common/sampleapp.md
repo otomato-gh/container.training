@@ -1,16 +1,16 @@
 # Our sample application
 
 - Visit the GitHub repository with all the materials of this workshop:
-  <br/>https://github.com/otomato_gh/container.training
+  <br/>https://github.com/otomato-gh/container.training
 
 - The application is in the [dockercoins](
-  https://github.com/otomato_gh/container.training/tree/master/dockercoins)
+  https://github.com/otomato-gh/container.training/tree/master/dockercoins)
   subdirectory
 
 - Let's look at the general layout of the source code:
 
   there is a Compose file [docker-compose.yml](
-  https://github.com/otomato_gh/container.training/blob/master/dockercoins/docker-compose.yml) ...
+  https://github.com/otomato-gh/container.training/blob/master/dockercoins/docker-compose.yml) ...
 
   ... and 4 other services, each in its own directory:
 
@@ -57,7 +57,7 @@ def hash_bytes(data):
 ```
 
 (Full source code available [here](
-https://github.com/otomato_gh/container.training/blob/8279a3bce9398f7c1a53bdd95187c53eda4e6435/dockercoins/worker/worker.py#L17
+https://github.com/otomato-gh/container.training/blob/8279a3bce9398f7c1a53bdd95187c53eda4e6435/dockercoins/worker/worker.py#L17
 ))
 
 ---
@@ -106,7 +106,7 @@ fi
 
 - Clone the repository on `node1`:
   ```bash
-  git clone git://github.com/otomato_gh/container.training
+  git clone git://github.com/otomato-gh/container.training
   ```
 
 ]
@@ -216,26 +216,6 @@ Tip: use `^S` and `^Q` to pause/resume log output.
 
 ---
 
-class: extra-details
-
-## Upgrading from Compose 1.6
-
-.warning[The `logs` command has changed between Compose 1.6 and 1.7!]
-
-- Up to 1.6
-
-  - `docker-compose logs` is the equivalent of `logs --follow`
-
-  - `docker-compose logs` must be restarted if containers are added
-
-- Since 1.7
-
-  - `--follow` must be specified explicitly
-
-  - new containers are automatically picked up by `docker-compose logs`
-
----
-
 ## Connecting to the web UI
 
 - The `webui` container exposes a web dashboard; let's view it
@@ -320,7 +300,7 @@ class: extra-details
 
 class: extra-details
 
-- Jérôme is clearly incapable of writing good frontend code
+- Jérôme is clearly incapable of writing good frontend code (And we didn't care enough to fix it.)
 
 ---
 
