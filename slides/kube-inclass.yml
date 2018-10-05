@@ -30,5 +30,6 @@ chapters:
 - - kube/kubectlscale.md
   - kube/daemonset.md
   - kube/rollout.md
+  - kube/networkpolicies.md
   - kube/whatsnext.md
   - common/thankyou.md
