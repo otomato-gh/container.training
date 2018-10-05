@@ -36,3 +36,21 @@ sudo apt-get install -y kubelet kubeadm kubectl
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 sudo adduser $USER docker
+#install kube-ps1
+cd ~/
+git clone https://github.com/jonmosco/kube-ps1.git
+echo 'source ~/kube-ps1/kube-ps1.sh' >> ~/.bashrc
+echo "PS1='[\u@\h \W \$(kube_ps1)]\$ '" >> ~/.bashrc
+cd -
+
+#install kubens and kubectx
+git clone https://github.com/ahmetb/kubectx.git ~/.kubectx
+COMPDIR=$(pkg-config --variable=completionsdir bash-completion)
+ln -sf ~/.kubectx/completion/kubens.bash $COMPDIR/kubens
+ln -sf ~/.kubectx/completion/kubectx.bash $COMPDIR/kubectx
+cat << FOE >> ~/.bashrc
+
+
+#kubectx and kubens
+export PATH=~/.kubectx:\$PATH
+FOE
