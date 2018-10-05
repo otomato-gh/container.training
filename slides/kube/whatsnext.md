@@ -20,23 +20,23 @@ And *then* it is time to look at orchestration!
 
 ---
 
-## Namespaces
+## One big cluster vs. multiple small ones
 
-- Namespaces let you run multiple identical stacks side by side
+- Yes, it is possible to have prod+dev in a single cluster
 
-- Two namespaces (e.g. `blue` and `green`) can each have their own `redis` service
+  (and implement good isolation and security with RBAC, network policies...)
 
-- Each of the two `redis` services has its own `ClusterIP`
+- But it is not a good idea to do that for our first deployment
 
-- `kube-dns` creates two entries, mapping to these two `ClusterIP` addresses:
+- Start with a production cluster + at least a test cluster
 
-  `redis.blue.svc.cluster.local` and `redis.green.svc.cluster.local`
+- Implement and check RBAC and isolation on the test cluster
 
-- Pods in the `blue` namespace get a *search suffix* of `blue.svc.cluster.local`
+  (e.g. deploy multiple test versions side-by-side)
 
-- As a result, resolving `redis` from a pod in the `blue` namespace yields the "local" `redis`
+- Make sure that all our devs have usable dev clusters
 
-.warning[This does not provide *isolation*! That would be the job of network policies.]
+  (whether it's a local minikube or a full-blown multi-node cluster)
 
 ---
 
@@ -93,13 +93,35 @@ And *then* it is time to look at orchestration!
 
 ---
 
-## Logging and metrics
+## Logging
 
 - Logging is delegated to the container engine
 
-- Metrics are typically handled with Prometheus
+- Logs are exposed through the API
 
-  (Heapster is a popular add-on)
+- Logs are also accessible through local files (`/var/log/containers`)
+
+- Log shipping to a central platform is usually done through these files
+
+  (e.g. with an agent bind-mounting the log directory)
+
+---
+
+## Metrics
+
+- The kubelet embeds [cAdvisor](https://github.com/google/cadvisor), which exposes container metrics
+
+  (cAdvisor might be separated in the future for more flexibility)
+
+- It is a good idea to start with [Prometheus](https://prometheus.io/)
+
+  (even if you end up using something else)
+
+- Starting from Kubernetes 1.8, we can use the [Metrics API](https://kubernetes.io/docs/tasks/debug-application-cluster/core-metrics-pipeline/)
+
+- [Heapster](https://github.com/kubernetes/heapster) was a popular add-on
+
+  (but is being [deprecated](https://github.com/kubernetes/heapster/blob/master/docs/deprecation.md) starting with Kubernetes 1.11)
 
 ---
 
@@ -116,39 +138,6 @@ And *then* it is time to look at orchestration!
 - **Never** store sensitive information in container images
 
   (It's the container equivalent of the password on a post-it note on your screen)
-
----
-
-## Managing stack deployments
-
-- The best deployment tool will vary, depending on:
-
-  - the size and complexity of your stack(s)
-  - how often you change it (i.e. add/remove components)
-  - the size and skills of your team
-
-- A few examples:
-
-  - shell scripts invoking `kubectl`
-  - YAML resources descriptions committed to a repo
-  - [Helm](https://github.com/kubernetes/helm) (~package manager)
-  - [Spinnaker](https://www.spinnaker.io/) (Netflix' CD platform)
-
----
-
-## Cluster federation
-
---
-
-![Star Trek Federation](images/startrek-federation.jpg)
-
---
-
-Sorry Star Trek fans, this is not the federation you're looking for!
-
---
-
-(If I add "Your cluster is in another federation" I might get a 3rd fandom wincing!)
 
 ---
 

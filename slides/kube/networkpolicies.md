@@ -1,10 +1,10 @@
 # Network policies
 
-- By default: 
+By default: 
 
-  - all pods can access all other pods (by ip)
+- all pods can access all other pods (by ip)
 
-  - all pods can access all services 
+- all pods can access all services 
   
   - in the same namespace (by name only)
   
@@ -14,7 +14,7 @@
 
 ## Network policies
 
-- Let's try to see if we can access our 'redis' service from our 'hasher' pod
+- Let's verify that we can access our 'redis' service from our 'hasher' pod
 
 .exercise[
 
@@ -26,12 +26,13 @@
   \#inside the pod:
     nc redis 6379
     PING
-  \# you should get:
-  \# +PONG
-  # which means redis is answering
   ```
-
-]
+  ]
+  you should get:
+  ```bash
+    +PONG
+  ```
+  which means redis is answering
 ---
 
 ## Restricting Access
@@ -40,9 +41,9 @@
 
 - **NetworkPolicy** to the rescue
 
-A network policy is a specification of how groups of pods are allowed to communicate with each other and other network endpoints.
+A *network policy* is a specification of how groups of pods are allowed to communicate with each other and other network endpoints.
 
-NetworkPolicy resources use labels to select pods and define rules which specify what traffic is allowed to the selected pods.
+NetworkPolicy resources use `labels` to select pods and define rules which specify what traffic is allowed to the selected pods.
 
 ---
 
@@ -65,8 +66,44 @@ NetworkPolicy resources use labels to select pods and define rules which specify
       matchLabels:
           run: redis
       ingress:
-      \- from:
-        \- podSelector:
+      - from:
+        - podSelector:
             matchLabels: 
               accessRedis: true
 ```]
+
+---
+
+## Restricting Access
+
+.exercise[
+
+- Deploy the network policy to the default namespace:
+  ```bash
+  kubectl create -f redis-access-nwp.yaml
+  \# and now let's see if the hasher can still access redis
+  kubectl exec -it <hasher-pod-name> sh
+  \#inside the pod:
+    nc redis 6379
+    PING
+  ```
+  ]
+- You should get no answer
+
+- But is our mining app still working?
+
+---
+
+## Granting Access
+
+.exercise[
+
+- Access permission is granted by pod label `accessRedis` with value `true`
+
+- Let's label our worker pod accordingly:
+
+  ```bash
+  kubectl label pod -l run=worker accessRedis=true
+  ```
+  ]
+- Is the app working now?

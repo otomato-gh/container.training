@@ -26,10 +26,17 @@ chapters:
   - kube/kubectlrun.md
 - - kube/kubectlexpose.md
   - kube/ourapponkube.md
+  - kube/kubectlproxy.md
   - kube/dashboard.md
 - - kube/kubectlscale.md
   - kube/daemonset.md
-  - kube/rollout.md
-  - kube/networkpolicies.md
-  - kube/whatsnext.md
-  - common/thankyou.md
+- - kube/rollout.md
+  - kube/healthchecks.md
+  - kube/logs-cli.md
+- - kube/helm.md
+  - kube/namespaces.md  
+  - kube/netpol.md
+  - kube/volumes.md
+  - kube/configuration.md
+- - kube/whatsnext.md
+  - kube/links.md

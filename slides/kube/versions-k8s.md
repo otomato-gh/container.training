@@ -1,6 +1,6 @@
 ## Brand new versions!
 
-- Kubernetes 1.10
+- Kubernetes 1.12
 - Docker Engine 18.12
 - Docker Compose 1.19
 
