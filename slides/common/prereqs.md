@@ -142,17 +142,20 @@ In your lab environment in Strigo (node1 only):
 .exercise[
 - Setup master on node1:
   ```bash
-  sudo kubeadm init
+  sudo kubeadm init --pod-network-cidr=192.168.0.0/16 
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
   ```
-- Deploy Weave pod network
+- Deploy Calico pod network
   ```bash
   sudo su - $USER
-  sysctl net.bridge.bridge-nf-call-iptables=1
   export kubever=$(kubectl version | base64 | tr -d '\n')
-  kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
+  kubectl apply -f \\ 
+  https://docs.projectcalico.org/v3.2/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+  
+  kubectl apply -f \\
+  https://docs.projectcalico.org/v3.2/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
   ```
 - Copy the 'kubeadm join' command
 ]
