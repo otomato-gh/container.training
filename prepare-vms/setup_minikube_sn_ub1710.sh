@@ -6,7 +6,9 @@ sudo apt-get update
 sudo apt-get install -y apt-transport-https \
 	                ca-certificates \
 		        curl \
-		        software-properties-common
+		        software-properties-common \
+				jq \
+				pkg-config
 
 #Add Docker’s official GPG key:
 
@@ -47,3 +49,22 @@ sudo chgrp -R $USER $HOME/.kube
 sudo mv /root/.minikube $HOME/.minikube # this will write over any previous configuration
 sudo chown -R $USER $HOME/.minikube
 sudo chgrp -R $USER $HOME/.minikube
+
+#install kube-ps1
+cd ~/
+git clone https://github.com/jonmosco/kube-ps1.git
+echo 'source ~/kube-ps1/kube-ps1.sh' >> ~/.bashrc
+echo "PS1='[\u@\h \W \$(kube_ps1)]\$ '" >> ~/.bashrc
+cd -
+
+#install kubens and kubectx
+git clone https://github.com/ahmetb/kubectx.git ~/.kubectx
+COMPDIR=$(pkg-config --variable=completionsdir bash-completion)
+sudo ln -sf ~/.kubectx/completion/kubens.bash $COMPDIR/kubens
+sudo ln -sf ~/.kubectx/completion/kubectx.bash $COMPDIR/kubectx
+cat << FOE >> ~/.bashrc
+
+
+#kubectx and kubens
+export PATH=~/.kubectx:\$PATH
+FOE
