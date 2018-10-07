@@ -38,5 +38,6 @@ chapters:
   - kube/netpol.md
   - kube/volumes.md
   - kube/configuration.md
+- - kube/newrelic.md
 - - kube/whatsnext.md
   - kube/links.md
