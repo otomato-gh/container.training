@@ -126,6 +126,7 @@ In your lab environment in Strigo (node1 and node2):
 - Clone the training repository:
   ```bash
   git clone https://github.com/otomato-gh/container.training.git
+  git checkout calico
   ```
 - Run the setup scripts
   ```bash

@@ -33,6 +33,7 @@ chapters:
 - - kube/rollout.md
   - kube/healthchecks.md
   - kube/logs-cli.md
+  - kube/hpa.md
 - - kube/helm.md
   - kube/namespaces.md  
   - kube/netpol.md
