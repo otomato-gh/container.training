@@ -27,7 +27,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 
 #install kubectl
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/linux/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.12.8/bin/linux/amd64/kubectl
 
 #Make the kubectl binary executable.
 chmod +x ./kubectl
@@ -38,9 +38,9 @@ sudo mv ./kubectl /usr/bin/kubectl
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 sudo adduser $USER docker
-curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.25.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
 
-sudo minikube start --vm-driver=none
+sudo minikube start --vm-driver=none --kubernetes-version=v1.12.8
 
 sudo mv /root/.kube $HOME/.kube # this will write over any previous configuration
 sudo chown -R $USER $HOME/.kube
