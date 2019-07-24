@@ -105,6 +105,8 @@
   - an external load balancer is allocated for the service
   - the load balancer is configured accordingly
     <br/>(e.g.: a `NodePort` service is created, and the load balancer sends traffic to that port)
+  - available only when the underlying infrastructure provides some "load balancer as a service"
+    <br/>(e.g. AWS, Azure, GCE, OpenStack...)
 
   (e.g. a few cents per hour on AWS or GCE)
 
@@ -133,8 +135,6 @@
   (e.g. most clusters deployed with kubeadm or on-premises)
   - the DNS entry managed by `kube-dns` will just be a `CNAME` to a provided record
   - no port, no IP address, no nothing else is allocated
-
-The `LoadBalancer` type is currently only available on AWS, Azure, and GCE.
 
 ---
 
@@ -169,23 +169,46 @@ The `LoadBalancer` type is currently only available on AWS, Azure, and GCE.
 - In another window, watch the pods (to see when they are created):
 .exercise[
 
-- Start a bunch of ElasticSearch containers:
-  ```bash
-  kubectl run elastic --image=elasticsearch:2 --replicas=7
-  ```
+  ... we wouldn't be able to tell the backends from each other!
 
-- Watch them being started:
+- We are going to use `jpetazzo/httpenv`, a tiny HTTP server written in Go
+
+- `jpetazzo/httpenv` listens on port 8888
+
+- It serves its environment variables in JSON format
+
+- The environment variables will include `HOSTNAME`, which will be the pod name
+
+  (and therefore, will be different on each backend)
+
+---
+
+## Creating a deployment for our HTTP server
+
+- We *could* do `kubectl run httpenv --image=jpetazzo/httpenv` ...
+
+- But since `kubectl run` is being deprecated, let's see how to use `kubectl create` instead
+
+.exercise[
+
+- In another window, watch the pods (to see when they are created):
   ```bash
   kubectl get pods -w
   ```
 
 <!-- ```keys ^C``` -->
 
+- Create a deployment for this very lightweight HTTP server:
+  ```bash
+  kubectl create deployment httpenv --image=jpetazzo/httpenv
+  ```
+
+- Scale it to 10 replicas:
+  ```bash
+  kubectl scale deployment httpenv --replicas=10
+  ```
+
 ]
-
-The `-w` option "watches" events happening on the specified resources.
-
-Note: please DO NOT call the service `search`. It would collide with the TLD.
 
 ---
 
@@ -195,14 +218,14 @@ Note: please DO NOT call the service `search`. It would collide with the TLD.
 
 .exercise[
 
-- Expose the ElasticSearch HTTP API port:
+- Expose the HTTP port of our server:
   ```bash
-  kubectl expose deploy/elastic --port 9200
+  kubectl expose deployment httpenv --port 8888
   ```
 
 - Look up which IP address was allocated:
   ```bash
-  kubectl get svc
+  kubectl get service
   ```
 
 ]
@@ -227,13 +250,13 @@ Note: please DO NOT call the service `search`. It would collide with the TLD.
 
 ## Testing our service
 
-- We will now send a few HTTP requests to our ElasticSearch pods
+- We will now send a few HTTP requests to our pods
 
 .exercise[
 
-- Let's obtain the IP address that was allocated for our service, *programatically:*
+- Let's obtain the IP address that was allocated for our service, *programmatically:*
   ```bash
-  IP=$(kubectl get svc elastic -o go-template --template '{{ .spec.clusterIP }}')
+  IP=$(kubectl get svc httpenv -o go-template --template '{{ .spec.clusterIP }}')
   ```
 
 <!--
@@ -244,7 +267,12 @@ Note: please DO NOT call the service `search`. It would collide with the TLD.
 
 - Send a few requests:
   ```bash
-  curl http://$IP:9200/
+  curl http://$IP:8888/
+  ```
+
+- Too much output? Filter it with `jq`:
+  ```bash
+  curl -s http://$IP:8888/ | jq .HOSTNAME
   ```
 
 ]

@@ -89,7 +89,7 @@ In your lab environment in Strigo:
 - Run the setup scripts
   ```bash
   cd container.training
-  ./prepare-vms/setup_minikube_sn_ub1710.sh
+  ./prepare-vms/setup_minikube_sn_ub1804.sh
   ```
 ]
 
