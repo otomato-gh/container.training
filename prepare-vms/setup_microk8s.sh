@@ -20,7 +20,7 @@ cd -
 
 #install kubens and kubectx
 git clone https://github.com/ahmetb/kubectx.git ~/.kubectx
-COMPDIR=$(pkg-config --variable=completionsdir bash-completion)
+COMPDIR=/usr/share/bash-completion/completions 
 sudo ln -sf ~/.kubectx/completion/kubens.bash $COMPDIR/kubens
 sudo ln -sf ~/.kubectx/completion/kubectx.bash $COMPDIR/kubectx
 cat << FOE >> ~/.bashrc
