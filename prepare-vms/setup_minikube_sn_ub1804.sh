@@ -39,7 +39,7 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc
 sudo adduser $USER docker
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
 
-sudo minikube start --vm-driver=none --kubernetes-version=v1.12.8 --extra-config kubeadm.ignore-preflight-errors=SystemVerification
+sudo minikube start --vm-driver=none --kubernetes-version=v1.12.8 --extra-config=kubeadm.ignore-preflight-errors=SystemVerification --extra-config=kubelet.resolv-conf=/run/systemd/resolve/resolv.conf
 
 sudo mv /root/.kube $HOME/.kube # this will write over any previous configuration
 sudo chown -R $USER $HOME/.kube
