@@ -28,6 +28,7 @@ chapters:
   - k8s/kubectlget.md
   - k8s/setup-k8s.md
   - k8s/kubectlrun.md
+  - k8s/deploymentslideshow.md
 - - k8s/kubectlexpose.md
   - k8s/ourapponkube.md
   - k8s/kubectlproxy.md

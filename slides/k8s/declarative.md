@@ -1,14 +1,27 @@
 ## Declarative vs imperative in Kubernetes
 
-- Virtually everything we create in Kubernetes is created from a *spec*
+- With Kubernetes, we cannot say: "run this container"
 
-- Watch for the `spec` fields in the YAML files later!
+- All we can do is write a *spec* and push it to the API server
 
-- The *spec* describes *how we want the thing to be*
+  (by creating a resource like e.g. a Pod or a Deployment)
 
-- Kubernetes will *reconcile* the current state with the spec
-  <br/>(technically, this is done by a number of *controllers*)
+- The API server will validate that spec (and reject it if it's invalid)
 
-- When we want to change some resource, we update the *spec*
+- Then it will store it in etcd
 
-- Kubernetes will then *converge* that resource
+- A *controller* will "notice" that spec and act upon it
+---
+
+## Declarative vs imperative in Kubernetes
+
+```yaml
+spec:                                                                        
+    containers:                                                        
+    - args:                                                            
+      - sleep                                                            
+      - "10"                                                            
+      image: alpine                                                      
+      imagePullPolicy: Always                                            
+      name: sleeper 
+```

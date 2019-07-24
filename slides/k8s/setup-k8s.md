@@ -57,6 +57,7 @@
   customizable deployments on AWS, Digital Ocean, GCE (beta), vSphere (alpha)
 
 - [minikube](https://kubernetes.io/docs/setup/minikube/),
+  [microk8s](https://microk8s.io/),
   [kubespawn](https://github.com/kinvolk/kube-spawn),
   [Docker Desktop](https://docs.docker.com/docker-for-mac/kubernetes/):
   for local development
