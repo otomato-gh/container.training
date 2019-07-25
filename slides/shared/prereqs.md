@@ -145,14 +145,14 @@ In your lab environment in Strigo (node1 only):
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
   ```
+- Copy the 'kubeadm join' command
 - Deploy Weave pod network
   ```bash
   sudo su - $USER
-  sysctl net.bridge.bridge-nf-call-iptables=1
+  sudo sysctl net.bridge.bridge-nf-call-iptables=1
   export kubever=$(kubectl version | base64 | tr -d '\n')
   kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$kubever
   ```
-- Copy the 'kubeadm join' command
 ]
 ---
 class: in-person

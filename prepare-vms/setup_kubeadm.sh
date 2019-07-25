@@ -8,7 +8,6 @@ sudo apt-get install -y apt-transport-https \
 		        curl \
 		        software-properties-common \
                         jq \
-			pkg-config
 
 #Add Docker’s official GPG key:
 
@@ -46,7 +45,7 @@ cd -
 
 #install kubens and kubectx
 git clone https://github.com/ahmetb/kubectx.git ~/.kubectx
-COMPDIR=$(pkg-config --variable=completionsdir bash-completion)
+COMPDIR=/usr/share/bash-completion/completions
 sudo ln -sf ~/.kubectx/completion/kubens.bash $COMPDIR/kubens
 sudo ln -sf ~/.kubectx/completion/kubectx.bash $COMPDIR/kubectx
 cat << FOE >> ~/.bashrc
