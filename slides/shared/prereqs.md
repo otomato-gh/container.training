@@ -164,7 +164,7 @@ class: in-person
 In your lab environment in Strigo (node2 only):
 .exercise[
 
-- rub kubeadm join command:
+- Run kubeadm join command (don't forget `sudo` and make sure your token is not truncated):
   ```bash
   sudo kubeadm join --token ...
   ```
@@ -176,6 +176,10 @@ In your lab environment in Strigo (node2 only):
   ```
 ]
 
+Note: if you lost the join command you can always renew the token by running (on node1):
+```bash
+sudo kubeadm token create --print-join-command 
+```
 ---
 class: in-person
 
