@@ -71,7 +71,7 @@
 
 - We need a repository with Kubernetes YAML files
 
-- I have one: https://github.com/jpetazzo/kubercoins
+- I have one: https://github.com/otomato-gh/kubercoins
 
 - Fork it to your GitHub account
 
@@ -87,7 +87,7 @@
 
 - Clone the Flux repository:
   ```
-  git clone https://github.com/weaveworks/flux
+  git clone https://github.com/fluxcd/flux
   ```
 
 - Edit `deploy/flux-deployment.yaml`
@@ -204,7 +204,7 @@
 
 - Get ourselves a sample repository with resource YAML files:
   ```
-  git clone git://github.com/jpetazzo/kubercoins
+  git clone git://github.com/otomato-gh/kubercoins
   cd kubercoins
   ```
 
@@ -234,6 +234,6 @@
 
   (see the [documentation](https://github.com/hasura/gitkube/blob/master/docs/remote.md) for more details)
 
-- Gitkube can also deploy Helm Charts
+- Gitkube can also deploy Helm charts
 
   (instead of raw YAML files)
