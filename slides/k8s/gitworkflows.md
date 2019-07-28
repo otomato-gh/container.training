@@ -71,7 +71,7 @@
 
 - We need a repository with Kubernetes YAML files
 
-- I have one: https://github.com/jpetazzo/kubercoins
+- I have one: https://github.com/otomato-gh/kubercoins
 
 - Fork it to your GitHub account
 
@@ -204,7 +204,7 @@
 
 - Get ourselves a sample repository with resource YAML files:
   ```
-  git clone git://github.com/jpetazzo/kubercoins
+  git clone git://github.com/otomato-gh/kubercoins
   cd kubercoins
   ```
 
