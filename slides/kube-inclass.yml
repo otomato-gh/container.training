@@ -48,5 +48,8 @@ chapters:
   - k8s/ingress.md
   - k8s/gitworkflows.md
   - k8s/prometheus.md
+- - k8s/owners-and-dependents.md
+  - k8s/extending-api.md
+  - k8s/operators.md
 - - k8s/whatsnext.md
   - k8s/links.md
