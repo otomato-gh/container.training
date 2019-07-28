@@ -146,9 +146,9 @@
 
   ... we wouldn't be able to tell the backends from each other!
 
-- We are going to use `jpetazzo/httpenv`, a tiny HTTP server written in Go
+- We are going to use `otomato/httpenv`, a tiny HTTP server written in Go
 
-- `jpetazzo/httpenv` listens on port 8888
+- `otomato/httpenv` listens on port 8888
 
 - It serves its environment variables in JSON format
 
@@ -185,7 +185,7 @@
 
 ## Creating a deployment for our HTTP server
 
-- We *could* do `kubectl run httpenv --image=jpetazzo/httpenv` ...
+- We *could* do `kubectl run httpenv --image=otomato/httpenv` ...
 
 - But since `kubectl run` is being deprecated, let's see how to use `kubectl create` instead
 
@@ -200,7 +200,7 @@
 
 - Create a deployment for this very lightweight HTTP server:
   ```bash
-  kubectl create deployment httpenv --image=jpetazzo/httpenv
+  kubectl create deployment httpenv --image=otomato/httpenv
   ```
 
 - Scale it to 10 replicas:

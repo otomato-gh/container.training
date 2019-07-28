@@ -404,7 +404,7 @@ class: extra-details
 
 - Create a Deployment running a web server:
   ```bash
-  kubectl create deployment web --image=jpetazzo/httpenv
+  kubectl create deployment web --image=otomato/httpenv
   ```
 
 - Scale it so that it spans multiple nodes:
