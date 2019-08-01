@@ -62,7 +62,7 @@ kubectl autoscale deployment loader --cpu-percent=30 --min=1 --max=5
 .small[
 ```bash
 kubectl run -i --tty requester --image=otomato/alpine-netcat:curl /bin/sh
-curl http://loader:5000
+curl http://loader:5000/load
 ```
 ]
 
@@ -87,3 +87,12 @@ kubectl get pod -l run=loader
 
 - We should see 5 pods!
 
+---
+
+## Clean up 
+
+- Exit the `requester` container
+
+- Delete the `loader` pod that loads the cpu
+
+- HPA will downscale the rest of the pods in ~5 minutes
