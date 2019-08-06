@@ -24,12 +24,12 @@
 
 - Roll back `worker` to image version 0.1:
   ```bash
-  kubectl set image deployment worker worker=dockercoins/worker:v0.1 --record
+  kubectl set image deployment worker worker=$REGISTRY/worker:v0.1 --record
   ```
 
 - Promote it to version 0.2 again:
   ```bash
-  kubectl set image deployment worker worker=dockercoins/worker:v0.2 --record
+  kubectl set image deployment worker worker=$REGISTRY/worker:v0.2 --record
   ```
 
 - View the change history:
@@ -49,7 +49,7 @@
 
 - Promote `worker` to image version 0.3:
   ```bash
-  kubectl set image deployment worker worker=dockercoins/worker:v0.3
+  kubectl set image deployment worker worker=$REGISTRY/worker:v0.3
   ```
 
 - View the change history:

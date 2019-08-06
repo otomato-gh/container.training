@@ -138,7 +138,7 @@
 
 - We can also "automate" a resource (i.e. automatically deploy new images)
 
-- And much more!
+- And we can manage Helm releases in a GitOps way with [Flux Helm Operator](https://github.com/fluxcd/helm-operator-get-started)
 
 ---
 
