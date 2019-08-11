@@ -17,19 +17,17 @@
 
 - Let's reuse our `nginx-with-volumes` example
 
-- It has a few extra touches:
+- Look at `~/container.training/k8s/ss-nginx.yaml`
 
-  - a `podAntiAffinity` prevents two pods from running on the same node
+- The StatefulSet template relicates the Pod definition but has a few extra touches:
 
-  - a `preStop` hook makes the pod leave the cluster when shutdown gracefully
+  - a Headless Service is defined to give our pods unique network identity
 
-This was inspired by this [excellent tutorial](https://github.com/kelseyhightower/consul-on-kubernetes) by Kelsey Hightower.
-Some features from the original tutorial (TLS authentication between
-nodes and encryption of gossip traffic) were removed for simplicity.
+  - a `podAntiAffinity` prevents two nginx pods from running on the same node  
 
 ---
 
-## Running our Consul cluster
+## Running our StatefulSet
 
 - We'll use the provided YAML file
 
@@ -37,60 +35,161 @@ nodes and encryption of gossip traffic) were removed for simplicity.
 
 - Create the stateful set and associated service:
   ```bash
-  kubectl apply -f ~/container.training/k8s/consul.yaml
+  kubectl apply -f ~/container.training/k8s/ss-nginx.yaml
   ```
+]
 
-- Check the logs as the pods come up one after another:
+--
+
+```
+The StatefulSet "nginx" is invalid: spec.template.spec.restartPolicy: 
+
+Unsupported value: "OnFailure": supported values: "Always"
+```
+
+- We got an error! StatefulSet is supposed to always be available!
+
+---
+
+## Running our StatefulSet
+
+- Let's fix it by removing the `restartPolicy` field in ss-nginx.yaml
+
+.exercise[
+
+- Edit the yaml and re-apply:
   ```bash
-  stern consul
+  kubectl apply -f ~/container.training/k8s/ss-nginx.yaml
   ```
 
-<!--
-```wait Synced node info```
-```keys ^C```
--->
-
-- Check the health of the cluster:
+- Check if the pods are getting started:
   ```bash
-  kubectl exec consul-0 consul members
+  kubectl get pod -l app=nginx -w
   ```
+]
+---
 
+## Crashing containers
+
+- Something is wrong!
+
+- `nginx-0` is in a `CrashLoopBackOff` and `nginx-1` is `Pending`
+
+- Let's see which container is not ready
+
+.exercise[
+  ```bash
+  kubectl get pod nginx-0  \ 
+  -ojsonpath='{range .status.containerStatuses[?(@.ready==false)]}{.name}{"\n"}{end}'
+  ```
+  - Git container is the one that's not ready!
+```bash
+kubectl logs nginx-0 git
+```
+```
+fatal: destination path '/www' already exists and is not an empty directory.
+```  
 ]
 
 ---
 
-## Caveats
+## [Init Containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) to the rescue
 
-- We haven't used a `volumeClaimTemplate` here
+- Git container exits on first success but then gets restarted and fails
 
-- That's because we don't have a storage provider yet
+- We actually only need to run git once on pod initialization
 
-  (except if you're running this on your own and your cluster has one)
+- There's a special kind of container for that - `initContainer`
 
-- What happens if we lose a pod?
-
-  - a new pod gets rescheduled (with an empty state)
-
-  - the new pod tries to connect to the two others
-
-  - it will be accepted (after 1-2 minutes of instability)
-
-  - and it will retrieve the data from the other pods
+- `initContainers` get executed once before other containers in the pod start. If they finish successfully - all the other containers get started.
 
 ---
 
-## Failure modes
+## Init containers 
 
-- What happens if we lose two pods?
+- Let's make our git container `init`
 
-  - manual repair will be required
+.exercise[
+  - add `initContainers:` on line 48 of `~/container.training/k8s/ss-nginx.yaml`:
+]
 
-  - we will need to instruct the remaining one to act solo
+```yaml
+      containers:
+      - name: nginx
+        image: nginx
+        volumeMounts:
+        - name: www 
+          mountPath: /usr/share/nginx/html/  
+      initContainers:
+      - name: git 
+        image: alpine/git
+        command: [ "sh", "-c", "git clone https://github.com/octocat/Spoon-Knife /www" ]
+        volumeMounts:
+        - name: www
+```
 
-  - then rejoin new pods
+---
+## Init containers
+.exercise[
+  - Let's try this:
+  ```bash
+  kubectl apply -f ~/container.training/k8s/ss-nginx.yaml
+  kubectl delete pod -l app=nginx
+  ```
+]
+- Watch the new pods come to life
 
-- What happens if we lose three pods? (aka all of them)
+- Yay, we got our `StatefulSet` running
 
-  - we lose all the data (ouch)
+---
 
-- If we run Consul without persistent storage, backups are a good idea!
+##Accessing the StatefulSet
+
+- Each pod in stateful set has a stable network id 
+
+- It derives its hostname from the name of the StatefulSet and the ordinal of the Pod. The pattern for the constructed hostname is $(statefulset name)-$(ordinal).
+
+- The domain for the pods can be managed by a Headless Service 
+
+- This domain takes the form: $(service name).$(namespace).svc.cluster.local. Each Pod gets a matching DNS subdomain, taking the form: $(podname).$(governing service domain), where the governing service is defined by the `serviceName` field on the StatefulSet.
+
+- In our example each of the nginx instances get domain names: nginx-0.nginx and nginx-1.nginx
+---
+
+##Accessing the StatefulSet
+
+.exercise[
+- Acess our stateful instances
+  ```bash
+  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
+  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-1.nginx
+  ```
+- But are they really stateful?
+- Let's try to change some html:
+  ```bash
+  kubectl exec  nginx-0  \ 
+  -- perl -i -ple "s/octocat/kubernetesio/g" /usr/share/nginx/html/index.html
+  ```
+- Verify it worked:
+  ```bash
+  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
+  ```
+]
+
+---
+## Not so Stateful
+
+.exercise[
+- Let's see if the state of our nginx-0 instance is persisted on restart
+```bash
+kubectl delete pod nginx-0
+kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
+```
+]
+
+--
+
+- Nope. The pod is restarted with a clean volume, init container is executed again and our changes are lost.
+
+- We need persistent storage!
+

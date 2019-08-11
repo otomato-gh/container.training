@@ -17,6 +17,7 @@ kind: StatefulSet
 metadata:
   name: nginx
 spec:
+  replicas: 2
   serviceName: nginx
   selector:
     matchLabels:
@@ -38,16 +39,16 @@ spec:
                     values:
                       - nginx
               topologyKey: kubernetes.io/hostname
-      initContainers:
+      containers:
+      - name: nginx
+        image: nginx
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html/  
       - name: git
         image: alpine/git
         command: [ "sh", "-c", "git clone https://github.com/octocat/Spoon-Knife /www" ]
         volumeMounts:
         - name: www
           mountPath: /www/   
-      containers:
-      - name: nginx
-        image: nginx
-        volumeMounts:
-        - name: www
-          mountPath: /usr/share/nginx/html/
+      restartPolicy: OnFailure

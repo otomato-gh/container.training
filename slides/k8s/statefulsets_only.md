@@ -318,3 +318,4 @@ spec:
 - These pods can each have their own persistent storage
 
   (Deployments cannot do that)
+

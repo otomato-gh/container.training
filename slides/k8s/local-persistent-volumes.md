@@ -78,7 +78,7 @@
 
 ---
 
-## Deploying Consul
+## Deploying Nginx instances
 
 - We will use a slightly different YAML file
 
@@ -92,9 +92,9 @@
 
 .exercise[
 
-- Apply the persistent Consul YAML file:
+- Apply the persistent Nginx YAML file:
   ```bash
-  kubectl apply -f ~/container.training/k8s/persistent-consul.yaml
+  kubectl apply -f ~/container.training/k8s/ss-nginx-with-pv.yaml
   ```
 
 ]
@@ -109,7 +109,7 @@
 
 - Check that we now have an unbound Persistent Volume Claim:
   ```bash
-  kubectl get pvc
+  kubectl get pvc -n orange
   ```
 
 - We don't have any Persistent Volume:
@@ -117,9 +117,9 @@
   kubectl get pv
   ```
 
-- The Pod `consul-0` is not scheduled yet:
+- The Pod `nginx-0` is not scheduled yet:
   ```bash
-  kubectl get pods -o wide
+  kubectl get pods -n orange -o wide
   ```
 
 ]
@@ -132,9 +132,9 @@
 
 - In a Stateful Set, the Pods are started one by one
 
-- `consul-1` won't be created until `consul-0` is running
+- `nginx-1` won't be created until `nginx-0` is running
 
-- `consul-0` has a dependency on an unbound Persistent Volume Claim
+- `nginx-0` has a dependency on an unbound Persistent Volume Claim
 
 - The scheduler won't schedule the Pod until the PVC is bound
 
@@ -144,45 +144,56 @@
 
 ## Creating Persistent Volumes
 
-- Let's create 3 local directories (`/mnt/consul`) on node2, node3, node4
+- Let's create 2 local directories (`/mnt/nginx`) on node1 and node2
 
-- Then create 3 Persistent Volumes corresponding to these directories
+- Then create 2 Persistent Volumes corresponding to these directories
 
+---
+## Creating local persistent volumes
 .exercise[
-
-- Create the local directories:
+- On node1 and node 2
   ```bash
-    for NODE in node2 node3 node4; do
-      ssh $NODE sudo mkdir -p /mnt/consul
-    done
+  sudo mkdir -p /mnt/nginx
   ```
-
 - Create the PV objects:
   ```bash
-  kubectl apply -f ~/container.training/k8s/volumes-for-consul.yaml
+  kubectl apply -f ~/container.training/k8s/volumes-for-ngix.yaml
   ```
-
 ]
+- Note: this relies on your nodes being named `node1` and `node2`. If they are not - edit `~/container.training/k8s/volumes-for-nginx.yaml`:
+```yaml
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - <your_node_name>
+```
+
 
 ---
 
-## Check our Consul cluster
+## Check our StatefulSet
 
 - The PVs that we created will be automatically matched with the PVCs
 
 - Once a PVC is bound, its pod can start normally
 
-- Once the pod `consul-0` has started, `consul-1` can be created, etc.
+- Once the pod `nginx-0` has started, `nginx-1` can be created, etc.
 
-- Eventually, our Consul cluster is up, and backend by "persistent" volumes
+- Eventually, all our nginx instances are up, and backed by "persistent" volumes
 
 .exercise[
 
-- Check that our Consul clusters has 3 members indeed:
+- Change the html for nginx-0, kill the pod, verify changes persist :
   ```bash
-  kubectl exec consul-0 consul members
+  kubens orange
+  kubectl exec nginx-0 -- \
+  perl -i -ple "s/octocat/kubernetesio/g" /usr/share/nginx/html/index.html
+  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
+  kubectl delete pod nginx-0
+  # wait for the pod to come back
+  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx 
   ```
-
 ]
 
 ---

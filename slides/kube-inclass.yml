@@ -44,8 +44,11 @@ chapters:
 - - k8s/helm.md
   - k8s/namespaces.md  
   - k8s/netpol.md
-  - k8s/volumes.md
+- - k8s/volumes.md
   - k8s/configuration.md
+  - k8s/statefulsets_only.md
+  - k8s/stateful-nginx.md
+  - k8s/local-persistent-volumes.md
 - - k8s/authn-authz.md
   - k8s/ingress.md
   - k8s/gitworkflows.md
