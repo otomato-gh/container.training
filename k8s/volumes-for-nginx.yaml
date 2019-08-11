@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-node1
+  annotations:
+    node: node1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Delete
+  local:
+    path: /mnt/nginx
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - node1
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-node2
+  annotations:
+    node: node2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Delete
+  local:
+    path: /mnt/nginx
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - node2

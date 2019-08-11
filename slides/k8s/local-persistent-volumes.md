@@ -1,6 +1,6 @@
 # Local Persistent Volumes
 
-- We want to run that Consul cluster *and* actually persist data
+- We want to run that our Nginx instances *and* actually persist data
 
 - But we don't have a distributed storage system
 
@@ -18,9 +18,9 @@
 
 ## With or without dynamic provisioning
 
-- We will deploy a Consul cluster *with* persistence
+- We will deploy a StatefulSet *with* persistence
 
-- That cluster's StatefulSet will create PVCs
+- Each pod in the StatefulSet will create a PVC
 
 - These PVCs will remain unbound¹, until we will create local volumes manually
 
@@ -56,7 +56,29 @@
 
 ---
 
-## Deploying Consul
+## Work in a separate namespace
+
+- To avoid conflicts with existing resources, let's create and use a new namespace
+
+.exercise[
+
+- Create a new namespace:
+  ```bash
+  kubectl create namespace orange
+  ```
+
+- Switch to that namespace:
+  ```bash
+  kns orange
+  ```
+
+]
+
+.warning[Make sure to call that namespace `orange`: it is hardcoded in the YAML files.]
+
+---
+
+## Deploying Nginx instances
 
 - We will use a slightly different YAML file
 
@@ -66,15 +88,13 @@
 
   - the corresponding `volumeMounts` in the Pod spec
 
-  - the label `consul` has been changed to `persistentconsul`
-    <br/>
-    (to avoid conflicts with the other Stateful Set)
+  - the namespace `orange` used for discovery of Pods
 
 .exercise[
 
-- Apply the persistent Consul YAML file:
+- Apply the persistent Nginx YAML file:
   ```bash
-  kubectl apply -f ~/container.training/k8s/persistent-consul.yaml
+  kubectl apply -f ~/container.training/k8s/ss-nginx-with-pv.yaml
   ```
 
 ]
@@ -89,7 +109,7 @@
 
 - Check that we now have an unbound Persistent Volume Claim:
   ```bash
-  kubectl get pvc
+  kubectl get pvc -n orange
   ```
 
 - We don't have any Persistent Volume:
@@ -97,9 +117,9 @@
   kubectl get pv
   ```
 
-- The Pod `persistentconsul-0` is not scheduled yet:
+- The Pod `nginx-0` is not scheduled yet:
   ```bash
-  kubectl get pods -o wide
+  kubectl get pods -n orange -o wide
   ```
 
 ]
@@ -112,9 +132,9 @@
 
 - In a Stateful Set, the Pods are started one by one
 
-- `persistentconsul-1` won't be created until `persistentconsul-0` is running
+- `nginx-1` won't be created until `nginx-0` is running
 
-- `persistentconsul-0` has a dependency on an unbound Persistent Volume Claim
+- `nginx-0` has a dependency on an unbound Persistent Volume Claim
 
 - The scheduler won't schedule the Pod until the PVC is bound
 
@@ -124,45 +144,56 @@
 
 ## Creating Persistent Volumes
 
-- Let's create 3 local directories (`/mnt/consul`) on node2, node3, node4
+- Let's create 2 local directories (`/mnt/nginx`) on node1 and node2
 
-- Then create 3 Persistent Volumes corresponding to these directories
+- Then create 2 Persistent Volumes corresponding to these directories
 
+---
+## Creating local persistent volumes
 .exercise[
-
-- Create the local directories:
+- On node1 and node 2
   ```bash
-    for NODE in node2 node3 node4; do
-      ssh $NODE sudo mkdir -p /mnt/consul
-    done
+  sudo mkdir -p /mnt/nginx
   ```
-
 - Create the PV objects:
   ```bash
-  kubectl apply -f ~/container.training/k8s/volumes-for-consul.yaml
+  kubectl apply -f ~/container.training/k8s/volumes-for-ngix.yaml
   ```
-
 ]
+- Note: this relies on your nodes being named `node1` and `node2`. If they are not - edit `~/container.training/k8s/volumes-for-nginx.yaml`:
+```yaml
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - <your_node_name>
+```
+
 
 ---
 
-## Check our Consul cluster
+## Check our StatefulSet
 
 - The PVs that we created will be automatically matched with the PVCs
 
 - Once a PVC is bound, its pod can start normally
 
-- Once the pod `persistentconsul-0` has started, `persistentconsul-1` can be created, etc.
+- Once the pod `nginx-0` has started, `nginx-1` can be created, etc.
 
-- Eventually, our Consul cluster is up, and backend by "persistent" volumes
+- Eventually, all our nginx instances are up, and backed by "persistent" volumes
 
 .exercise[
 
-- Check that our Consul clusters has 3 members indeed:
+- Change the html for nginx-0, kill the pod, verify changes persist :
   ```bash
-  kubectl exec persistentconsul-0 consul members
+  kubens orange
+  kubectl exec nginx-0 -- \
+  perl -i -ple "s/octocat/kubernetesio/g" /usr/share/nginx/html/index.html
+  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
+  kubectl delete pod nginx-0
+  # wait for the pod to come back
+  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx 
   ```
-
 ]
 
 ---
@@ -246,10 +277,3 @@
   (when we can't or won't dedicate a whole disk to a volume)
 
 - It's possible to mix both (using distinct Storage Classes)
-
-???
-
-:EN:- Static vs dynamic volume provisioning
-:EN:- Example: local persistent volume provisioner
-:FR:- Création statique ou dynamique de volumes
-:FR:- Exemple : création de volumes locaux
