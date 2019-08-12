@@ -140,7 +140,7 @@ In your lab environment in Strigo (node1 only):
 .exercise[
 - Setup master on node1:
   ```bash
-  sudo kubeadm init
+  sudo kubeadm init --node-name node1
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -162,9 +162,9 @@ class: in-person
 In your lab environment in Strigo (node2 only):
 .exercise[
 
-- Run kubeadm join command (don't forget `sudo` and make sure your token is not truncated):
+- Run kubeadm join command, adding `--node-name node2` (don't forget `sudo` and make sure your token is not truncated):
   ```bash
-  sudo kubeadm join --token ...
+  sudo kubeadm join --token ... --node-name node2
   ```
 - Back on node1:
   ```bash
