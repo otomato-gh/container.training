@@ -455,7 +455,7 @@ class: extra-details
 
 - What if we want to get metrics for containers belong to pod tagged `worker`?
 
-- The cAdvisor exporter does not give us Kubernetes labels
+- The cAdvisor exporter (embedded in kubelet) does not give us Kubernetes labels
 
 - Kubernetes labels are exposed through another exporter
 
@@ -486,3 +486,13 @@ class: extra-details
   - see [this comment](https://github.com/prometheus/prometheus/issues/2204#issuecomment-261515520) for an overview
 
   - or [this blog post](https://5pi.de/2017/11/09/use-prometheus-vector-matching-to-get-kubernetes-utilization-across-any-pod-label/) for a complete description of the process
+
+---
+
+##Prometheus - more
+
+- For production-grade Prometheus on Kubernetes you can also look at [prometheus-operator](https://github.com/coreos/prometheus-operator) or [kube-prometheus](https://github.com/coreos/kube-prometheus)
+
+- Also you can use [kubernetes-mixin](https://github.com/kubernetes-monitoring/kubernetes-mixin) for a simpler setup
+
+- And - there's also a [Prometheus metrics adapter](https://github.com/directXMan12/k8s-prometheus-adapter) that can replace metrics-server for HPA 
