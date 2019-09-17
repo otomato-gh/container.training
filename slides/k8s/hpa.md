@@ -17,6 +17,8 @@
 - Horizontal Pod Autoscaler (HPA)
 automatically scales the number of pods in a deployment based on observed CPU utilization
 
+  - Utilization is calculated as a percentage of the equivalent resource request on the containers in each pod.
+
 - Or on custom metrics, but that is more complex to set up
 
 - But how does the HPA get the metrics?
