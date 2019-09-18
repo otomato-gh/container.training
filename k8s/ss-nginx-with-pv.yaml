@@ -51,7 +51,7 @@ spec:
       initContainers:
       - name: git
         image: alpine/git
-        command: [ "sh", "-c", "[ -d /www ] || git clone https://github.com/octocat/Spoon-Knife /www" ]
+        command: [ "sh", "-c", "[ -f /www/index.html ] || git clone https://github.com/octocat/Spoon-Knife /www" ]
         volumeMounts:
         - name: www
           mountPath: /www/   
