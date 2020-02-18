@@ -5,7 +5,7 @@ class: extra-details
 
 ## So what the hell is Cloud-Native?
 
-- Appications that are adapted to running on modern PaaS
+- Applications that are adapted to running on modern PaaS
 
   - See Heroku's 12-factor app: https://12factor.net/
 
