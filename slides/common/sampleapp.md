@@ -66,7 +66,7 @@ https://github.com/otomato-gh/container.training/blob/8279a3bce9398f7c1a53bdd951
 
 --
 
-- It is a DockerCoin miner! .emoji[💰🐳📦🚢]
+- It is a DockerCoin miner!
 
 --
 
