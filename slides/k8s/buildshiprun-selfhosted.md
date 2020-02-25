@@ -66,7 +66,7 @@ so that your build pipeline is automated.*
 
 - Get the port number programmatically:
   ```bash
-  NODEPORT=$(kubectl get svc/registry -o json | jq .spec.ports[0].nodePort)
+  NODEPORT=$(kubectl get svc/registry -o json | jq '.spec.ports[0].nodePort')
   REGISTRY=127.0.0.1:$NODEPORT
   ```
 
