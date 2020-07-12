@@ -12,7 +12,7 @@ slides: https://devopstrain.pro/k8s
 exclude:
 - self-paced
 
-chapters:
+content:
 - shared/title.md
 - logistics.md
 - k8s/intro.md
@@ -27,7 +27,7 @@ chapters:
   - k8s/kubenet.md
   - k8s/kubectlget.md
   - k8s/setup-k8s.md
-  - k8s/kubectlrun.md
+  - k8s/kubectl-run.md
   - k8s/deploymentslideshow.md
 - - k8s/kubectlexpose.md
   - k8s/ourapponkube.md
