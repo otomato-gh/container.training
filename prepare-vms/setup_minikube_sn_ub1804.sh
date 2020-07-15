@@ -8,6 +8,7 @@ sudo apt-get install -y apt-transport-https \
 		        curl \
 		        software-properties-common \
 				jq \
+				conntrack \
 
 #Add Docker’s official GPG key:
 
@@ -36,19 +37,13 @@ sudo mv ./kubectl /usr/bin/kubectl
 
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 
-sudo adduser $USER docker
+sudo usermod -aG docker $USER && newgrp docker
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
-  && chmod +x minikube
+  && chmod +x ./minikube
 
-sudo minikube start --vm-driver=none --kubernetes-version=v1.18.0 --extra-config=kubeadm.ignore-preflight-errors=SystemVerification --extra-config=kubelet.resolv-conf=/run/systemd/resolve/resolv.conf --extra-config=kubeadm.ignore-preflight-errors=NumCPU
-
-sudo mv /root/.kube $HOME/.kube # this will write over any previous configuration
-sudo chown -R $USER $HOME/.kube
-sudo chgrp -R $USER $HOME/.kube
-
-sudo mv /root/.minikube $HOME/.minikube # this will write over any previous configuration
-sudo chown -R $USER $HOME/.minikube
-sudo chgrp -R $USER $HOME/.minikube
+sudo ./minikube start --vm-driver=none --kubernetes-version=v1.18.0 --extra-config=kubeadm.ignore-preflight-errors=SystemVerification --extra-config=kubelet.resolv-conf=/run/systemd/resolve/resolv.conf --extra-config=kubeadm.ignore-preflight-errors=NumCPU
+# give user permissions to kubectl config
+sudo chown -R $USER $HOME/.kube $HOME/.minikube
 
 #install kube-ps1
 cd ~/
