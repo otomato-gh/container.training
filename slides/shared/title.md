@@ -14,7 +14,7 @@ class: title, in-person
 **Based on slides by Jerome Petazzoni**<br/>
 *Presented by Anton Weiss*<br/>
 *Otomato technical training.*<br/>
-*http://otomato.link*
+*https://otomato.io*
 
 **Slides: http://www.devopstrain.pro/k8s/**
 ]
