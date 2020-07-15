@@ -37,7 +37,8 @@ sudo mv ./kubectl /usr/bin/kubectl
 
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 
-sudo usermod -aG docker $USER && newgrp docker
+sudo usermod -aG docker $USER 
+
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
   && chmod +x ./minikube
 
