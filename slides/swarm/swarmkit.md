@@ -9,7 +9,7 @@
 
 --
 
-.footnote[.emoji[🐳] Did you know that кит means "whale" in Russian?]
+.footnote[ Did you know that кит means "whale" in Russian?]
 
 ---
 
