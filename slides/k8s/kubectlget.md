@@ -146,6 +146,10 @@ class: extra-details
   kubectl explain node.spec
   ```
 
+- We can view the definition for a resource type with:
+  ```bash
+  kubectl explain node --recursive
+  ```
 ---
 
 class: extra-details
@@ -215,10 +219,13 @@ class: extra-details
 .exercise[
 
 - Look at the information available for `node1` with one of the following commands:
-- We can view the definition for a resource type with:
-  ```bash
-  kubectl explain node --recursive
-  ```
+```bash
+    kubectl describe node/node1
+    kubectl describe node node1
+```
+]
+
+(We should notice a bunch of control plane pods.)
 
 ---
 

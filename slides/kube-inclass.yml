@@ -29,6 +29,7 @@ content:
   - k8s/setup-k8s.md
   - k8s/kubectl-run.md
   - k8s/deploymentslideshow.md
+  - k8s/exercise-hostdate.md
 - 
   - k8s/kubectlexpose.md
   - k8s/ourapponkube.md
