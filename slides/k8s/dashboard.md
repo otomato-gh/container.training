@@ -2,82 +2,48 @@
 
 - Kubernetes resources can also be viewed with a web dashboard
 
-- We are going to deploy that dashboard with *three commands:*
+- That dashboard is usually exposed over HTTPS
 
-  - one to actually *run* the dashboard
+  (this requires obtaining a proper TLS certificate)
 
-  - one to make the dashboard available from outside
+- Dashboard users need to authenticate
 
-  - one to bypass authentication for the dashboard
+- We are going to take a *dangerous* shortcut
 
---
+---
+
+## The insecure method
+
+- We could (and should) use [Let's Encrypt](https://letsencrypt.org/) ...
+
+- ... but we don't want to deal with TLS certificates
+
+- We could (and should) learn how authentication and authorization work ...
+
+- ... but we will use a guest account with admin access instead
 
 .footnote[.warning[Yes, this will open our cluster to all kinds of shenanigans. Don't do this at home.]]
 
 ---
 
-## Running the dashboard
+## Running a very insecure dashboard
 
-- We need to create a *deployment* and a *service* for the dashboard
+- We are going to deploy that dashboard with *one single command*
 
-- But also a *secret*, a *service account*, a *role* and a *role binding*
+- This command will create all the necessary resources
 
-- All these things can be defined in a YAML file and created with `kubectl apply -f`
+  (the dashboard itself, the HTTP wrapper, the admin/guest account)
+
+- All these resources are defined in a YAML file
+
+- All we have to do is load that YAML file with with `kubectl apply -f`
 
 .exercise[
 
 - Create all the dashboard resources, with the following command:
   ```bash
-  kubectl apply -f https://goo.gl/Qamqab
+  kubectl apply -f ~/container.training/k8s/insecure-dashboard.yaml
   ```
-
-]
-
-The goo.gl URL expands to:
-<br/>
-.small[https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml]
-
----
-
-## Making the dashboard reachable from outside
-
-- The dashboard is exposed through a `ClusterIP` service
-
-- We need a `NodePort` service instead
-
-.exercise[
-
-- Edit the service:
-  ```bash
-  kubectl edit service kubernetes-dashboard
-  ```
-
-]
-
---
-
-`NotFound`?!? Y U NO WORK?!?
-
----
-
-## Editing the `kubernetes-dashboard` service
-
-- If we look at the YAML that we loaded just before, we'll get a hint
-
---
-
-- The dashboard was created in the `kube-system` namespace
-
-.exercise[
-
-- Edit the service:
-  ```bash
-  kubectl -n kube-system edit service kubernetes-dashboard
-  ```
-
-- Change `ClusterIP` to `NodePort`, save, and exit
-
-- Check the port that was assigned with `kubectl -n kube-system get services`
 
 ]
 
@@ -87,13 +53,29 @@ The goo.gl URL expands to:
 
 .exercise[
 
-- Connect to https://oneofournodes:3xxxx/
-
-  (You will have to work around the TLS certificate validation warning)
-
-<!-- ```open https://node1:3xxxx/``` -->
+- Check which port the dashboard is on:
+  ```bash
+  kubectl get svc dashboard
+  ```
 
 ]
+
+You'll want the `3xxxx` port.
+
+
+.exercise[
+
+- Connect to http://oneofournodes:3xxxx/
+
+<!-- ```open http://node1:3xxxx/``` -->
+
+]
+
+The dashboard will then ask you which authentication you want to use.
+
+---
+
+## Dashboard authentication
 
 - We have three authentication options at this point:
 
@@ -103,30 +85,23 @@ The goo.gl URL expands to:
 
   - "skip" (use the dashboard "service account")
 
-- Let's use "skip": we get a bunch of warnings and don't see much
-
----
-
-## Granting more rights to the dashboard
-
-- The dashboard documentation [explains how to do](https://github.com/kubernetes/dashboard/wiki/Access-control#admin-privileges)
-
-- We just need to load another YAML file!
-
-.exercise[
-
-- Grant admin privileges to the dashboard so we can see our resources:
-  ```bash
-  kubectl apply -f https://goo.gl/CHsLTA
-  ```
-
-- Reload the dashboard and enjoy!
-
-]
+- Let's use "skip": we're logged in!
 
 --
 
 .warning[By the way, we just added a backdoor to our Kubernetes cluster!]
+
+---
+
+## Running the Kubernetes dashboard securely
+
+- The steps that we just showed you are *for educational purposes only!*
+
+- If you do that on your production cluster, people [can and will abuse it](https://redlock.io/blog/cryptojacking-tesla)
+
+- For an in-depth discussion about securing the dashboard,
+  <br/>
+  check [this excellent post on Heptio's blog](https://blog.heptio.com/on-securing-the-kubernetes-dashboard-16b09b1b7aca)
 
 ---
 
@@ -190,6 +165,8 @@ The goo.gl URL expands to:
 
 - It's safe if you use HTTPS URLs from trusted sources
 
+- Example: the official setup instructions for most pod networks
+
 --
 
 - It introduces new failure modes
@@ -200,5 +177,3 @@ The goo.gl URL expands to:
 
 :EN:- The Kubernetes dashboard
 :FR:- Le *dashboard* Kubernetes
-
-- Example: the official setup instructions for most pod networks
