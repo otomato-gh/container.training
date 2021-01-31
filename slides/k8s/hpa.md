@@ -31,7 +31,7 @@ automatically scales the number of pods in a deployment based on observed CPU ut
 .exercise[
 - Create a metrics-server deployment and service:
   ```bash
-  kubectl apply -f https://raw.githubusercontent.com/kubernetes/kops/master/addons/metrics-server/v1.8.x.yaml
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/kops/master/addons/metrics-server/v1.16.x.yaml
   ```
 - It takes the metrics server a couple of minutes to start scraping metrics
   
