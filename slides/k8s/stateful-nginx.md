@@ -160,8 +160,8 @@ fatal: destination path '/www' already exists and is not an empty directory.
 .exercise[
 - Acess our stateful instances
   ```bash
-  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
-  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-1.nginx
+  kubectl run -it --rm --restart=Never curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
+  kubectl run -it --rm curl --restart=Never --image=otomato/alpine-netcat:curl -- curl nginx-1.nginx
   ```
 - But are they really stateful?
 - Let's try to change some html:
@@ -171,7 +171,7 @@ fatal: destination path '/www' already exists and is not an empty directory.
   ```
 - Verify it worked:
   ```bash
-  kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
+    kubectl run -it --rm --restart=Never curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
   ```
 ]
 
@@ -182,7 +182,7 @@ fatal: destination path '/www' already exists and is not an empty directory.
 - Let's see if the state of our nginx-0 instance is persisted on restart
 ```bash
 kubectl delete pod nginx-0
-kubectl run -it --rm curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
+  kubectl run -it --rm --restart=Never curl --image=otomato/alpine-netcat:curl -- curl nginx-0.nginx
 ```
 ]
 
