@@ -1,10 +1,7 @@
 # Exercise — writing YAML
 
-Let's write YAML manifests for the wordsmith app!
+Let's write YAML manifests for maskshop microservice app!
 
-It can be a single YAML file or multiple files in a directory.
-
-See next slides for testing instructions and hints.
 
 ---
 

@@ -34,6 +34,7 @@ content:
 - 
   - k8s/kubectlexpose.md
   - k8s/ourapponkube.md
+  - k8s/exercise-maskshop.md
   - k8s/dashboard.md
 
 - 
