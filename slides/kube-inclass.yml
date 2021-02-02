@@ -34,6 +34,7 @@ content:
   - k8s/kubectlexpose.md
   - k8s/ourapponkube.md
   - k8s/dashboard.md
+
 - 
   - k8s/scalingdockercoins.md
   - shared/hastyconclusions.md
@@ -53,7 +54,7 @@ content:
   - k8s/helm-create-basic-chart.md
   - k8s/helm-create-better-chart.md
   - k8s/helm-secrets.md
-  - k8s/exercise-helm.md
+  - k8s/exercise-helm-maskshop.md
 - 
   - k8s/namespaces.md
   - k8s/localkubeconfig.md
@@ -72,6 +73,9 @@ content:
   - k8s/statefulsets_only.md
   - k8s/stateful-nginx.md
   - k8s/local-persistent-volumes.md
+-
+  - k8s/cni-overview.md
+  - k8s/cni-internals.md
 - 
   - k8s/netpol.md
   - k8s/authn-authz.md
