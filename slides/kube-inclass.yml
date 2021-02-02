@@ -25,6 +25,7 @@ content:
   - shared/declarative.md
   - k8s/declarative.md
   - k8s/kubenet.md
+  - k8s/kube-router-ipvs.md
   - k8s/kubectlget.md
   - k8s/setup-k8s.md
   - k8s/kubectl-run.md
