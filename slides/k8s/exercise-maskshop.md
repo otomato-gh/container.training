@@ -6,6 +6,12 @@ What app? A [Mask Shop](https://github.com/otomato-gh/maskshop.git)!
 
 ![how to build a mask shop](images/maskshop.png)
 
+- Clone the exercise repo:
+  ```bash
+  git clone https://github.com/otomato-gh/maskshop.git
+  ```
+
+
 ---
 
 ## Mask Shop Components

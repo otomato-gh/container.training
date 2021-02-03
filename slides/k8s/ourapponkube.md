@@ -229,7 +229,7 @@ services:
 
 - Deploy `redis`:
   ```bash
-  kubectl run redis --image=redis
+  kubectl create deployment redis --image=redis
   ```
 
 - Deploy everything else:
