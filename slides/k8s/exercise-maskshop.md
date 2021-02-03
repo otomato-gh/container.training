@@ -14,7 +14,7 @@ We have the following components:
 
 | Name  | Image                           | Port |
 |-------|---------------------------------|------|
-| mongo | mongo                           | 5432 |
+| mongo | mongo                           | 27017 |
 | api   | otomato/maskshop-api:latest     | 80   |
 | front | otomato/maskshop-front:latest   | 80   |
 
