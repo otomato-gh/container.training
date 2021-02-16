@@ -23,10 +23,10 @@ First - download and extract the official Velero release tarball:
 
 .exercise[
 ```
-curl -L https://git.io/Jtzry -o velero.tar.gz
-tar xvfz velero.tar.gz
-cd velero-v1.5.3-linux-amd64
-export PATH=.:${PATH}
+  curl -L https://git.io/Jtzry -o velero.tar.gz
+  tar xvfz velero.tar.gz
+  cd velero-v1.5.3-linux-amd64
+  export PATH=.:${PATH}
 ```
 ]
 

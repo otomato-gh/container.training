@@ -50,14 +50,6 @@ content:
   - k8s/logs-cli.md
 -
   - k8s/ingress.md
-  - k8s/kustomize.md
-  - k8s/helm-intro.md
-  - k8s/helm-chart-format.md
-  - k8s/helm-create-basic-chart.md
-  - k8s/helm-create-better-chart.md
-  - k8s/helm-secrets.md
-  - k8s/exercise-helm-maskshop.md
-- 
   - k8s/namespaces.md
   - k8s/localkubeconfig.md
   - k8s/accessinternal.md
@@ -75,10 +67,18 @@ content:
   - k8s/statefulsets_only.md
   - k8s/stateful-nginx.md
   - k8s/local-persistent-volumes.md
-- - k8s/cluster-backup.md
+  - k8s/cluster-backup.md
   - k8s/openebs.md
   - k8s/velero.md
   - k8s/cloud-controller-manager.md
+-
+  - k8s/kustomize.md
+  - k8s/helm-intro.md
+  - k8s/helm-chart-format.md
+  - k8s/helm-create-basic-chart.md
+  - k8s/helm-create-better-chart.md
+  - k8s/helm-secrets.md
+  - k8s/exercise-helm-maskshop.md
 -
   - k8s/cni-overview.md
   - k8s/cni-internals.md

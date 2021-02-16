@@ -234,10 +234,10 @@ services:
 
 - Deploy everything else:
   ```bash
-  kubectl create deployment hasher --image=dockercoins/hasher:v0.1
-  kubectl create deployment rng --image=dockercoins/rng:v0.1
-  kubectl create deployment webui --image=dockercoins/webui:v0.1
-  kubectl create deployment worker --image=dockercoins/worker:v0.1
+  kubectl create deployment hasher --image=$REGISTRY/hasher:v0.1
+  kubectl create deployment rng --image=$REGISTRY/rng:v0.1
+  kubectl create deployment webui --image=$REGISTRY/webui:v0.1
+  kubectl create deployment worker --image=$REGISTRY/worker:v0.1
   ```
 
 ]
