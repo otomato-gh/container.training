@@ -8,9 +8,7 @@ Level 1: create a chart to deploy [maskshop](https://github.com/otomato-gh/masks
 
 Level 2: make it so that the number of replicas can be set with `--set replicas=X`.
 
-Level 3: change the size of the displayed images of the lego bricks.
-
-(For level 3, fork the repository and use ctr.run to build images.)
+Level 3: initialize the store inventory by setting the environment variable INITDB to 'true' in `front`
 
 See next slide if you need hints!
 
@@ -34,26 +32,18 @@ Install the resulting chart. Voilà!
 
 --
 
-Use `{{ .Values.replicas }}` in the YAML manifest for `words`.
+Use `{{ .Values.replicas }}` in the YAML manifest for `api`.
 
 --
 
-Also add `replicas: 5` to `values.yaml` to provide a default value.
+Also add `replicas: 3` to `values.yaml` to provide a default value.
 
 ---
 
-## Changing the color
+## Initializing the DB
 
-- Fork the repository
+- Add and `INITDB` environment variable in `front` deployment set to {{ .Values.initdb }}
 
-- Make sure that your fork has valid Dockerfiles
+- Add a corresponding entry in values.yaml set to 'false'
 
-  (or identify a branch that has valid Dockerfiles)
-
-- Change the images and/or CSS in `front/static`
-
-- Build your own images and update the image repository values in values.yaml
-
-- Commit, push, trigger a rolling update
-
-  (`imagePullPolicy` should be `Always`, which is the default)
+- Run `helm upgrade --install <release> . --set initdb="true"` 
