@@ -274,14 +274,14 @@ class: extra-details
 
 .exercise[
 ```
-kubectl patch machine machine-sample1 --type=merge -p "
+kubectl patch machine machine-1 --type=merge -p "
 spec:
   SwitchPosition: up
 "
 ```
-Does it get flipped?
+Does it get flipped back down?
 ```
-kubectl get machine machine-sample1 -ojsonpath="{ .spec.SwitchP
+kubectl get machine machine-1 -ojsonpath="{ .spec.SwitchP
 osition }"
 ```
 Not really...
@@ -325,11 +325,11 @@ return {'flipped at': datetime.now().strftime('%Y-%m-%d %H:%M:%S') }
 .exercise[
 Patch the machine and get its status:
 ```
-kubectl patch machine machine-sample1 --type=merge -p "
+kubectl patch machine machine-1 --type=merge -p "
 spec:
   SwitchPosition: up
 "
-kubectl get machine machine-sample1 -ojsonpath="{ .status }"
+kubectl get machine machine-1 -ojsonpath="{ .status }"
 ```
 ]
 
