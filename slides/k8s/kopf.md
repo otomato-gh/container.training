@@ -293,11 +293,10 @@ Not really...
 ## "Improving" our controller
 
 - Let's modify the machine whenever it's updated
-
+ (Also change the name of the function)
 ```python
 @kopf.on.create('machines')
 @kopf.on.update('machines')
-# Let's change the name of our function to create_update_fn
 def create_update_fn(spec, name, namespace, logger, **kwargs):
 ```
 
@@ -315,9 +314,13 @@ Let's set machine status to flipped:
 ```python
 #add this in the beginning
 from datetime import datetime
-# and add this in the end
+#and add this in the end
 return {'flipped at': datetime.now().strftime('%Y-%m-%d %H:%M:%S') }
 ```
+
+---
+
+## What's the status?
 
 .exercise[
 Patch the machine and get its status:
