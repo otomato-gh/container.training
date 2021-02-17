@@ -54,6 +54,7 @@ content:
   - k8s/localkubeconfig.md
   - k8s/accessinternal.md
   - k8s/kubectlproxy.md
+  - k8s/owners-and-dependents.md
 - 
   - k8s/logs-centralized.md
   - k8s/prometheus.md
@@ -93,7 +94,7 @@ content:
   - k8s/extending-api.md
   - k8s/operators.md
   - k8s/operators-design.md
-  - k8s/owners-and-dependents.md
+
 - 
   - k8s/whatsnext.md
   - k8s/links.md
