@@ -94,6 +94,7 @@ content:
   - k8s/extending-api.md
   - k8s/operators.md
   - k8s/operators-design.md
+  - k8s/kopf.md
 
 - 
   - k8s/whatsnext.md
