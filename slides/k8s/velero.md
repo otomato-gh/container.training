@@ -40,28 +40,103 @@ For the workshop we will use [Minio](https://minio.io) - the AWS S3 simulator as
 ---
 ## Install Minio
 
-Create a Velero-specific credentials file (credentials-velero) in your local directory:
-```
-[default]
-aws_access_key_id = minio
-aws_secret_access_key = minio123
-```
-
 Deploy Minio to the cluster:
+.exercise[
+```
+  kubectl apply -f ~/container.training/k8s/minio.yaml
+```
+- Get the NodePort for minio service:
+```
+export PORT=$(kubectl get svc minio -n velero \ 
+-ojsonpath="{ .spec.ports[0].nodePort }")
+```
+]
 
-```
-kubectl apply -f ~/container.training/k8s/minio.yaml
-```
 ---
 ## Deploy Velero with Minio Backend
 
+.exercise[
+- Get the IP of the master node:
 ```
-velero install \
-    --provider aws \
-    --plugins velero/velero-plugin-for-aws:v1.0.0 \
-    --bucket velero \
-    --secret-file ./credentials-velero \
-    --use-volume-snapshots=false \
-    --backup-location-config region=minio,s3ForcePathStyle="true",s3Url=http://minio.velero.svc:9000 
+  NODEIP=$(kubectl get node -l=kubernetes.io/role=master \
+   -ojsonpath="{ .items[0].status.addresses[?(@.type=='ExternalIP')].address }")
+  PUBLICURL=http://${NODEIP}:${PORT}
 ```
+```
+  velero install \
+  --provider aws \
+  --plugins velero/velero-plugin-for-aws:v1.0.0 \
+  --bucket velero \
+  --secret-file ./credentials-velero \
+  --use-volume-snapshots=false \
+  --use-restic \
+  --backup-location-config \
+  region=minio,s3ForcePathStyle="true",s3Url=http://minio:9000,publicUrl=${PUBLICURL}
+```
+]
 
+---
+## Deploy the example Nginx instance with PV
+
+**Note** - if you've previously deployed OpenEBS on the training cluster - change the PVC definition in velero-nginx-with-pv.yaml to `storageClassName: openebs-hostpath`
+
+.exercise[
+```
+  kubectl apply -f ~/container.training/k8s/velero-nginx-with-pv.yaml
+```
+- Check to see that both the Velero and nginx deployments are successfully created:
+```
+  kubectl get deployments -l component=velero --namespace=velero
+  kubectl get deployments --namespace=nginx-example
+```
+]
+
+---
+
+## Create a Velero Backup
+
+Velero can filter backup resources based on specified selectors, full namespace backups and [more options](https://velero.io/docs/v1.5/resource-filtering/)
+
+To specify a selector - pass `--selector` to `velero backup create`
+
+To specify a whole namespace - pass `--include-namespace`
+
+.exercise[
+Backup the nginx instance with PV:
+```
+  velero backup create nginx-backup --include-namespaces nginx-example
+```
+]
+
+---
+
+## Check the backup status
+
+.exercise[
+
+- Describe the backup
+```bash
+  velero backup describe nginx-backup
+```
+ - Check the backup logs:
+```bash
+  velero backup logs nginx-backup
+```
+]
+
+---
+
+## Simulate a DRP
+
+
+.exercise[
+
+- The namespace gets destroyed
+```bash
+  kubectl delete namespace nginx-example
+```
+- Verify the PV got deleted as well:
+```bash
+  kubectl get pv
+```
+]

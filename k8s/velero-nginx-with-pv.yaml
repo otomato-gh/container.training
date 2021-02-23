@@ -30,7 +30,7 @@ metadata:
     app: nginx
 spec:
   # Optional:
-  # storageClassName: <YOUR_STORAGE_CLASS_NAME>
+  # storageClassName: openebs-hostpath
   accessModes:
     - ReadWriteOnce
   resources:
