@@ -36,3 +36,32 @@ First - download and extract the official Velero release tarball:
 We need to run Velero's cluster-side component, specifying the storage backend for storing the backups.
 
 For the workshop we will use [Minio](https://minio.io) - the AWS S3 simulator as our storage backend.
+
+---
+## Install Minio
+
+Create a Velero-specific credentials file (credentials-velero) in your local directory:
+```
+[default]
+aws_access_key_id = minio
+aws_secret_access_key = minio123
+```
+
+Deploy Minio to the cluster:
+
+```
+kubectl apply -f ~/container.training/k8s/minio.yaml
+```
+---
+## Deploy Velero with Minio Backend
+
+```
+velero install \
+    --provider aws \
+    --plugins velero/velero-plugin-for-aws:v1.0.0 \
+    --bucket velero \
+    --secret-file ./credentials-velero \
+    --use-volume-snapshots=false \
+    --backup-location-config region=minio,s3ForcePathStyle="true",s3Url=http://minio.velero.svc:9000 
+```
+
