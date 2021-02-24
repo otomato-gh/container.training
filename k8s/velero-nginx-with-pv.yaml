@@ -30,7 +30,7 @@ metadata:
     app: nginx
 spec:
   # Optional:
-  # storageClassName: openebs-hostpath
+  storageClassName: openebs-hostpath
   accessModes:
     - ReadWriteOnce
   resources:
@@ -99,4 +99,4 @@ spec:
     targetPort: 80
   selector:
     app: nginx
-  type: LoadBalancer
+  type: NodePort

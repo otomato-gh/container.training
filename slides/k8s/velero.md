@@ -47,8 +47,13 @@ Deploy Minio to the cluster:
 ```
 - Get the NodePort for minio service:
 ```
-export PORT=$(kubectl get svc minio -n velero \ 
--ojsonpath="{ .spec.ports[0].nodePort }")
+PORT=$(kubectl get svc minio -n velero -ojsonpath="{ .spec.ports[0].nodePort }")
+```
+- Create a local file with Minio credentials (minio-creds):
+```
+[default]
+aws_access_key_id = minio
+aws_secret_access_key = minio123
 ```
 ]
 
@@ -67,7 +72,7 @@ export PORT=$(kubectl get svc minio -n velero \
   --provider aws \
   --plugins velero/velero-plugin-for-aws:v1.0.0 \
   --bucket velero \
-  --secret-file ./credentials-velero \
+  --secret-file ./minio-creds \
   --use-volume-snapshots=false \
   --use-restic \
   --backup-location-config \
@@ -140,3 +145,5 @@ Backup the nginx instance with PV:
   kubectl get pv
 ```
 ]
+
+**Note**: your resources may get stuck in *Terminating* state. You will have to deal with object *finalizers* to resolve this. Ask your instructor for help, or look at this [StackOverflow question](https://stackoverflow.com/questions/52369247/namespace-stuck-as-terminating-how-do-i-remove-it)
