@@ -73,7 +73,7 @@ aws_secret_access_key = minio123
   --plugins velero/velero-plugin-for-aws:v1.0.0 \
   --bucket velero \
   --secret-file ./minio-creds \
-  --use-volume-snapshots=false \
+  --use-volume-snapshots=true \
   --use-restic \
   --backup-location-config \
   region=minio,s3ForcePathStyle="true",s3Url=http://minio:9000,publicUrl=${PUBLICURL}
@@ -81,18 +81,18 @@ aws_secret_access_key = minio123
 ]
 
 ---
-## Deploy the example Nginx instance with PV
+## Deploy the example Deployment with PV
 
 **Note** - if you've previously deployed OpenEBS on the training cluster - change the PVC definition in velero-nginx-with-pv.yaml to `storageClassName: openebs-hostpath`
 
 .exercise[
 ```
-  kubectl apply -f ~/container.training/k8s/velero-nginx-with-pv.yaml
+  kubectl apply -f ~/container.training/k8s/velero-example-pod.yaml
 ```
-- Check to see that both the Velero and nginx deployments are successfully created:
+- Check to see that both the Velero and example deployments are successfully created:
 ```
   kubectl get deployments -l component=velero --namespace=velero
-  kubectl get deployments --namespace=nginx-example
+  kubectl get deployments --namespace=velero-example
 ```
 ]
 
@@ -109,7 +109,7 @@ To specify a whole namespace - pass `--include-namespace`
 .exercise[
 Backup the nginx instance with PV:
 ```
-  velero backup create nginx-backup --include-namespaces nginx-example
+  velero backup create my-backup --include-namespaces velero-example
 ```
 ]
 
@@ -121,11 +121,11 @@ Backup the nginx instance with PV:
 
 - Describe the backup
 ```bash
-  velero backup describe nginx-backup
+  velero backup describe my-backup
 ```
  - Check the backup logs:
 ```bash
-  velero backup logs nginx-backup
+  velero backup logs my-backup
 ```
 ]
 
@@ -133,12 +133,16 @@ Backup the nginx instance with PV:
 
 ## Simulate a DRP
 
-
 .exercise[
 
 - The namespace gets destroyed
 ```bash
-  kubectl delete namespace nginx-example
+  kubectl delete deploy \
+    -n velero-example \
+    --all --force \
+    --grace-period=0
+  kubectl delete pvc velero-logs -n velero-example --force
+  kubectl delete namespace velero-example --force
 ```
 - Verify the PV got deleted as well:
 ```bash
@@ -147,3 +151,19 @@ Backup the nginx instance with PV:
 ]
 
 **Note**: your resources may get stuck in *Terminating* state. You will have to deal with object *finalizers* to resolve this. Ask your instructor for help, or look at this [StackOverflow question](https://stackoverflow.com/questions/52369247/namespace-stuck-as-terminating-how-do-i-remove-it)
+
+---
+## Let's restore everything
+
+.exercise[
+```
+velero restore create my-restore \
+  --from-backup=my-backup \
+  --restore-volumes=true
+```
+- Verify all objects got restored:
+```
+kubectl get all -n velero-example
+kubectl get pvc -n velero-example
+```
+]
