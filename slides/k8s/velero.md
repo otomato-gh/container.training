@@ -83,7 +83,7 @@ aws_secret_access_key = minio123
 ---
 ## Deploy the example Deployment with PV
 
-**Note** - if you've previously deployed OpenEBS on the training cluster - change the PVC definition in velero-nginx-with-pv.yaml to `storageClassName: openebs-hostpath`
+**Note** - if you've previously deployed OpenEBS on the training cluster - change the PVC definition in velero-example-pod.yaml to `storageClassName: openebs-hostpath`
 
 .exercise[
 ```

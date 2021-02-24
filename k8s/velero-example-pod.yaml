@@ -30,7 +30,7 @@ metadata:
     app: velero-example
 spec:
   # Optional:
-  storageClassName: openebs-hostpath
+  # storageClassName: openebs-hostpath
   accessModes:
     - ReadWriteOnce
   resources:
