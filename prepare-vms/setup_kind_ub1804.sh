@@ -42,7 +42,7 @@ sudo usermod -aG docker $USER
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64 \
     && chmod +x ./kind
 
-sudo ./kind create cluster --name test  --config ./kind.yaml
+sudo ./kind create cluster --name test  --config ~/container.training/prepare-vms/kind.yaml
 # give user permissions to kubectl config
 sudo chown -R $USER $HOME/.kube
 
