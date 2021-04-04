@@ -167,11 +167,9 @@ What does that mean?
 
 ## Let's experiment a bit!
 
-- For the exercises in this section, connect to the first node of the `test` cluster
+- For the exercises in this section we will use the minikube cluster
 
 .exercise[
-
-- SSH to the first node of the test cluster
 
 - Check that the cluster is operational:
   ```bash

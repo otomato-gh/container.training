@@ -2,13 +2,11 @@ title: |
   Advanced
   Kubernetes
 
-chat: "[Slack](https://dockercommunity.slack.com/messages/C7GKACWDV)"
-#chat: "[Gitter](https://gitter.im/jpetazzo/workshop-yyyymmdd-city)"
+chat: "[Slack](https://join.slack.com/t/otomato-flux/shared_invite/enQtMzE5NjY1Njk4MzM5LWRkNmI5NGI5YjY0MWVlNjA0ZjdkMjRiMjlkZDY5ZTI4NGE3MWQ1M2E0ZTJlNjA2YTQ4ZjdmNTA4ZjRmODY1ZjY)"
 
-gitrepo: github.com/jpetazzo/container.training
+gitrepo: github.com/otomato-gh/container.training
 
-slides: https://container.training/
-
+slides: https://devopstrain.pro/advanced-k8s
 #slidenumberprefix: "#SomeHashTag &mdash; "
 
 exclude:
@@ -19,12 +17,9 @@ content:
 - logistics.md
 - k8s/intro.md
 - shared/about-slides.md
-#- shared/chat-room-im.md
-#- shared/chat-room-zoom-meeting.md
-#- shared/chat-room-zoom-webinar.md
 - shared/toc.md
 - #1
-  - k8s/prereqs-admin.md
+  - shared/prereqs.md
   - k8s/architecture.md
   - k8s/internal-apis.md
   - k8s/deploymentslideshow.md
