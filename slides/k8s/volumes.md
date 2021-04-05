@@ -112,14 +112,14 @@ It runs a single NGINX container.
 
 <!-- ```bash kubectl wait pod/nginx-without-volume --for condition=ready ``` -->
 
-- Get its IP address:
+- Port-forward to the pod:
   ```bash
-  IPADDR=$(kubectl get pod nginx-without-volume -o jsonpath={.status.podIP})
+  kubectl port-forward nginx-without-volume 8880:80
   ```
 
-- Send a request with curl:
+- In another shell - send a request with curl:
   ```bash
-  curl $IPADDR
+  curl localhost:8880
   ```
 
 ]
@@ -179,14 +179,14 @@ spec:
 
 <!-- ```bash kubectl wait pod/nginx-with-volume --for condition=ready ``` -->
 
-- Get its IP address:
+- Port-forward to the pod:
   ```bash
-  IPADDR=$(kubectl get pod nginx-with-volume -o jsonpath={.status.podIP})
+  kubectl port-forward nginx-without-volume 8880:80
   ```
 
-- Send a request with curl:
+- In another shell - send a request with curl:
   ```bash
-  curl $IPADDR
+  curl localhost:8880
   ```
 
 ]
@@ -296,16 +296,21 @@ spec:
 ```bash IP=$(kubectl get pod nginx-with-git -o jsonpath={.status.podIP})```
 -->
 
-- As soon as we see its IP address, access it:
+- Port-forward to it right away :
   ```bash
-  curl `$IP`
+  kubectl port-forward nginx-without-volume 8880:80
+  ```
+
+- In another shell - send a request with curl:
+  ```bash
+  curl localhost:8880
   ```
 
 <!-- ```bash /bin/sleep 5``` -->
 
 - A few seconds later, the state of the pod will change; access it again:
   ```bash
-  curl `$IP`
+  curl localhost:8880
   ```
 
 ]

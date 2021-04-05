@@ -37,7 +37,6 @@ It can be installed with helm:
 Let's check the running OpenEBS components:
 
 .exercise[
-
 ```bash  
     kubectl get pod -n openebs
 ```
@@ -46,7 +45,6 @@ Let's check the running OpenEBS components:
 Let's check the new StorageClasses:
 
 .exercise[
-
 ```bash  
     kubectl get sc
 ```
@@ -103,7 +101,6 @@ provisioner: openebs.io/local
 ---
 
 ##  Create a host path PVC
-
 Let's create a Persistent Volume Claim
 .exercise[
 ```bash
@@ -130,19 +127,21 @@ kubectl get pvc
 
 .exercise[
 - Create a pod from yaml:
+
 ```
-kubectl apply -f ~/container.training/k8s/openebs-pod.yaml
+  kubectl apply -f ~/container.training/k8s/openebs-pod.yaml
 ```
+
 - Look at the pod definition:
 ```
   volumes:
-  \- name: my-storage
-     persistentVolumeClaim:
-       claimName: local-hostpath-pvc
+  - name: my-storage
+    persistentVolumeClaim:
+      claimName: local-hostpath-pvc
   containers:
 ....  
     volumeMounts:
-    \- mountPath: /mnt/storage
+    - mountPath: /mnt/storage
       name: my-storage
 ```
 ]
@@ -152,14 +151,15 @@ kubectl apply -f ~/container.training/k8s/openebs-pod.yaml
 
 .exercise[
  - Get the worker node where the pod is located
- ```
-kubectl get pod openebs-local-hostpath-pod -ojsonpath
-="{ .spec.nodeName }"
+
+```
+  kubectl get pod openebs-local-hostpath-pod -ojsonpath="{ .spec.nodeName }"
 ```
 - ssh into the node
 
 - check the volume content
+
 ```
-sudo cat /var/openebs/local/pvc-*/greet.txt
+  sudo cat /var/openebs/local/pvc-*/greet.txt
 ```
 ]

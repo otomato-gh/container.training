@@ -218,7 +218,7 @@
 
   - which is forbidden by the anti-affinity constraints in the StatefulSet
 
-- To avoid that, we need to associated the PVs with a Storage Class that has:
+- To avoid that, we need to associate the PVs with a Storage Class that has:
   ```yaml
   volumeBindingMode: WaitForFirstConsumer
   ```
@@ -265,8 +265,6 @@
 - Remember, when a node goes down, the volumes on that node become unavailable
 
 - High availability will require another layer of replication
-
-  (like what we've just seen with Consul; or primary/secondary; etc)
 
 - Pre-provisioning PVs makes sense for machines with local storage
 

@@ -23,46 +23,50 @@ content:
   - k8s/architecture.md
   - k8s/internal-apis.md
   - k8s/deploymentslideshow.md
-  - k8s/dmuc.md
 - #2
-  - k8s/multinode.md
-  - k8s/cni.md
-  - k8s/interco.md
+  - k8s/volumes.md
+  - k8s/configuration.md
+  - k8s/statefulsets_only.md
+  - k8s/stateful-nginx.md
+  - k8s/local-persistent-volumes.md
+  - k8s/openebs.md
+  - k8s/csi.md
 - #3
-  - k8s/cni-internals.md
-  - k8s/apilb.md
-  - k8s/control-plane-auth.md
-  - |
-    # (Extra content)
-  - k8s/staticpods.md
-  - k8s/cluster-upgrade.md
+  - k8s/cluster-backup.md
+  - k8s/velero.md
 - #4
-  - k8s/kustomize.md
+  - k8s/authn-authz.md
+  - k8s/podsecuritypolicy.md
+  - k8s/control-plane-auth.md
+- #5
+  - k8s/cni-overview.md
+  - k8s/cni-internals.md
+  - k8s/ingress.md
+  - k8s/netpol.md
+- #6
+  - k8s/resource-limits.md
+  - k8s/metrics-server.md
+  - k8s/cluster-sizing.md
+  - k8s/hpa.md
+- #7
   - k8s/helm-intro.md
   - k8s/helm-chart-format.md
   - k8s/helm-create-basic-chart.md
-  - |
-    # (Extra content)
   - k8s/helm-create-better-chart.md
   - k8s/helm-secrets.md
-- #5
+  - k8s/exercise-helm-maskshop.md
+- #8
   - k8s/extending-api.md
   - k8s/operators.md
-  - k8s/sealed-secrets.md
-  - k8s/crd.md
-- #6
-  - k8s/ingress-tls.md
-  - k8s/cert-manager.md
-  - k8s/eck.md
-- #7
+- #9
   - k8s/admission.md
   - k8s/kyverno.md
-- #8
+- #10
   - k8s/aggregation-layer.md
   - k8s/metrics-server.md
   - k8s/prometheus.md
   - k8s/hpa-v2.md
-- #9
+- #11
   - k8s/operators-design.md
   - k8s/kubebuilder.md
   - k8s/events.md
