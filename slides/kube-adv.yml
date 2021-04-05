@@ -58,7 +58,6 @@ content:
 - #8
   - k8s/extending-api.md
   - k8s/operators.md
-- #9
   - k8s/admission.md
   - k8s/kyverno.md
 - #10
@@ -71,10 +70,5 @@ content:
   - k8s/kubebuilder.md
   - k8s/events.md
   - k8s/finalizers.md
-  - |
-    # (Extra content)
-  - k8s/owners-and-dependents.md
-  - k8s/apiserver-deepdive.md
-  #- k8s/record.md
   - shared/thankyou.md
 
