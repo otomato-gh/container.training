@@ -130,11 +130,6 @@ class: extra-details
 - We can list all available resource types by running `kubectl api-resources`
   <br/>
   (In Kubernetes 1.10 and prior, this command used to be `kubectl get`)
-## What's available?
-
-- We can list all available resource types by running `kubectl api-resources`
-  <br/>
-  (In Kubernetes 1.10 and prior, this command used to be `kubectl get`)
 
 - We can view the definition for a resource type with:
   ```bash
@@ -150,24 +145,6 @@ class: extra-details
   ```bash
   kubectl explain node --recursive
   ```
----
-
-class: extra-details
-
-## Introspection vs. documentation
-
-- We can access the same information by reading the [API documentation](https://kubernetes.io/docs/reference/#api-reference)
-
-- The API documentation is usually easier to read, but:
-
-  - it won't show custom types (like Custom Resource Definitions)
-
-  - we need to make sure that we look at the correct version
-
-- `kubectl api-resources` and `kubectl explain` perform *introspection*
-
-  (they communicate with the API server and obtain the exact type definitions)
-
 ---
 
 ## Type names

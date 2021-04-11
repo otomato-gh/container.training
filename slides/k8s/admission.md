@@ -188,7 +188,7 @@ Some examples ...
 
 - Development will happen in local containers, plumbed with ngrok
 
-- The we will deploy to the cluster 🔥
+- The we will deploy to the cluster
 
 ---
 

@@ -27,7 +27,7 @@ content:
 -
   - shared/prereqs.md
   #- shared/webssh.md
-  - shared/connecting.md
+  #- shared/connecting.md
   #- k8s/versions-k8s.md
   - shared/sampleapp.md
   #- shared/composescale.md

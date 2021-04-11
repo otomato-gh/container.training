@@ -160,35 +160,6 @@
 
 ## Creating a deployment for our HTTP server
 
-- We will create a deployment with `kubectl create deployment`
-
-- Then we will scale it with `kubectl scale`
-
-.exercise[
-
-- In another window, watch the pods (to see when they are created):
-.exercise[
-
-  ... we wouldn't be able to tell the backends from each other!
-
-- We are going to use `jpetazzo/httpenv`, a tiny HTTP server written in Go
-
-- `jpetazzo/httpenv` listens on port 8888
-
-- It serves its environment variables in JSON format
-
-- The environment variables will include `HOSTNAME`, which will be the pod name
-
-  (and therefore, will be different on each backend)
-
----
-
-## Creating a deployment for our HTTP server
-
-- We *could* do `kubectl run httpenv --image=otomato/httpenv` ...
-
-- But since `kubectl run` is being deprecated, let's see how to use `kubectl create` instead
-
 .exercise[
 
 - In another window, watch the pods (to see when they are created):

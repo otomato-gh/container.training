@@ -36,7 +36,7 @@
 
 - The pods can persist data on attached volumes
 
-🤔 Wait a minute ... Can't we already attach volumes to pods and deployments?
+ Wait a minute ... Can't we already attach volumes to pods and deployments?
 
 ---
 

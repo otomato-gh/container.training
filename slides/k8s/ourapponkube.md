@@ -76,7 +76,7 @@ In this part, we will:
 
 - Create the registry service:
   ```bash
-  kubectl run registry --image=registry:2
+  kubectl create deployment registry --image=registry:2
   ```
 
 - Expose it on a NodePort:
