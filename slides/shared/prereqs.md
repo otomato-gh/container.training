@@ -94,6 +94,22 @@ In your lab environment in Strigo:
 ]
 
 ---
+## Use single-node minikube on Ubuntu on EC2
+
+In your lab environment in Strigo:
+.exercise[
+- Enter new shell for docker permissions to kick in:
+  ```bash
+  sudo su - $USER
+  ```
+- Check minikube is up:
+  ```bash
+  kubectl get nodes
+  ```
+- This installed docker, minikube and kubectl
+]
+
+---
 
 class: in-person
 
