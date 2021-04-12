@@ -16,5 +16,5 @@ class: title, in-person
 *Otomato technical training.*<br/>
 *https://otomato.io*
 
-**Slides: http://www.devopstrain.pro/k8s/**
+**Slides: @@SLIDES@@**
 ]
