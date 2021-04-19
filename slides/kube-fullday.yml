@@ -37,7 +37,7 @@ content:
   - k8s/kubectlget.md
 -
   - k8s/kubectl-run.md
-  - k8s/batch-jobs.md
+  # - k8s/batch-jobs.md
   - k8s/labels-annotations.md
   - k8s/kubectl-logs.md
   - k8s/logs-cli.md
@@ -45,6 +45,7 @@ content:
   - k8s/declarative.md
   - k8s/deploymentslideshow.md
   - k8s/kubenet.md
+  - k8s/kubectl-exec.md
   - k8s/kubectlexpose.md
   - k8s/shippingimages.md
   #- k8s/buildshiprun-selfhosted.md
