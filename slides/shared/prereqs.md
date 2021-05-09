@@ -78,7 +78,7 @@ class: in-person
 
 class: in-person
 
-## Use [kind](https://kind.sigs.k8s.io/) on Ubuntu on EC2
+## Use single-node minikube on Ubuntu on EC2
 
 In your lab environment in Strigo:
 .exercise[
@@ -89,11 +89,14 @@ In your lab environment in Strigo:
 - Run the setup scripts
   ```bash
   cd container.training
-  ./prepare-vms/setup_kind_ub1804.sh
+  ./prepare-vms/setup_minikube_sn_ub1804.sh
   ```
 ]
 
 ---
+
+class: in-person
+
 ## Use single-node minikube on Ubuntu on EC2
 
 In your lab environment in Strigo:
@@ -107,25 +110,6 @@ In your lab environment in Strigo:
   kubectl get nodes
   ```
 - This installed docker, minikube and kubectl
-]
-
----
-
-class: in-person
-
-## Use [kind](https://kind.sigs.k8s.io/) on Ubuntu on EC2
-
-In your lab environment in Strigo:
-.exercise[
-- Enter new shell for docker permissions to kick in:
-  ```bash
-  sudo su - $USER
-  ```
-- Check [kind](https://kind.sigs.k8s.io/) cluster is up:
-  ```bash
-  kubectl get nodes
-  ```
-- This installed docker, kind and kubectl
 ]
 
 ---
