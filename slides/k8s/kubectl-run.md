@@ -314,7 +314,7 @@ class: extra-details
 
 --
 
-- We will use the image `otomato-gh/ping`
+- We will use the image `otomato/ping`
 
   (it has a default command of `ping 127.0.0.1`)
 
@@ -324,13 +324,13 @@ class: extra-details
 
 - Let's create a Deployment named `pingpong`
 
-- It will use the image `otomato-gh/ping`
+- It will use the image `otomato/ping`
 
 .exercise[
 
 - Create the Deployment:
   ```bash
-  kubectl create deployment pingpong --image=otomato-gh/ping
+  kubectl create deployment pingpong --image=otomato/ping
   ```
 
 - Check the resources that were created:
