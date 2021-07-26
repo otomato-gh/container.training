@@ -18,7 +18,7 @@ We want to store the static files (served by `web`) in a ConfigMap.
 
 1. Transform the `static` directory into a ConfigMap.
 
-   (https://github.com/jpetazzo/wordsmith/tree/master/web/static)
+   (https://github.com/otomato-gh/wordsmith/tree/master/web/static)
 
 2. Find out where that `static` directory is located in `web`.
 

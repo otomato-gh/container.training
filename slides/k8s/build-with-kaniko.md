@@ -119,7 +119,7 @@ spec:
     args: 
     - |
       apk add --no-cache git &&
-      git clone git://github.com/jpetazzo/container.training /workspace
+      git clone git://github.com/otomato-gh/container.training /workspace
     volumeMounts:
     - name: workspace
       mountPath: /workspace

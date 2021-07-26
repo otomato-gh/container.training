@@ -164,7 +164,7 @@ class: extra-details
 
 - Security advantage (stronger isolation between pods)
 
-Check [this blog post](http://jpetazzo.github.io/2019/02/13/running-kubernetes-without-nodes-with-kiyot/) for more details.
+Check [this blog post](http://otomato-gh.github.io/2019/02/13/running-kubernetes-without-nodes-with-kiyot/) for more details.
 
 ???
 

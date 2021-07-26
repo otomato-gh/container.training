@@ -26,7 +26,7 @@
 
 - Create a Deployment:
   ```bash
-  kubectl create deployment clock --image=jpetazzo/clock
+  kubectl create deployment clock --image=otomato-gh/clock
   ```
 
 - Look at its annotations and labels:

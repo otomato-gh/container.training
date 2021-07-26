@@ -211,14 +211,14 @@
 
 ## Deploying DockerCoins with YAML files
 
-- The GitHub repository `jpetazzo/kubercoins` contains everything we need!
+- The GitHub repository `otomato-gh/kubercoins` contains everything we need!
 
 .exercise[
 
 - Clone the kubercoins repository:
   ```bash
   cd ~
-  git clone https://github.com/jpetazzo/kubercoins
+  git clone https://github.com/otomato-gh/kubercoins
   ```
 
 - Create all the DockerCoins resources:
@@ -339,7 +339,7 @@ Note: we could have used `--namespace=default` for the same result.
 
 - `kube-ps1` makes it easy to track these, by showing them in our shell prompt
 
-- It is installed on our training clusters, and when using [shpod](https://github.com/jpetazzo/shpod)
+- It is installed on our training clusters, and when using [shpod](https://github.com/otomato-gh/shpod)
 
 - It gives us a prompt looking like this one:
   ```

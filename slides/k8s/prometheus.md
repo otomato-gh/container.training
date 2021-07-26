@@ -473,7 +473,7 @@ class: extra-details
 
 For details about container metrics, see:
 <br/>
-http://jpetazzo.github.io/2013/10/08/docker-containers-metrics/
+http://otomato-gh.github.io/2013/10/08/docker-containers-metrics/
 
 ---
 

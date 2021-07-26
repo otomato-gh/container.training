@@ -102,7 +102,7 @@
 
 - Use ctr.run to automatically build a container image and run it:
   ```bash
-  docker run ctr.run/github.com/jpetazzo/container.training/dockercoins/hasher
+  docker run ctr.run/github.com/otomato-gh/container.training/dockercoins/hasher
   ```
 
 <!--

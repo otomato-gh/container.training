@@ -63,7 +63,7 @@
 
 - Clone the kubercoins repository:
   ```bash
-  git clone https://github.com/jpetazzo/kubercoins
+  git clone https://github.com/otomato-gh/kubercoins
   ```
 
 - Copy the YAML files to the `templates/` directory:

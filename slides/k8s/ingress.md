@@ -44,7 +44,7 @@
 
   Apache, HAProxy, Hipache, NGINX, Traefik, ...
 
-  (look at [jpetazzo/aiguillage](https://github.com/jpetazzo/aiguillage) for a minimal reverse proxy configuration using NGINX)
+  (look at [otomato-gh/aiguillage](https://github.com/otomato-gh/aiguillage) for a minimal reverse proxy configuration using NGINX)
 
 - Most of these options require us to update/edit configuration files after each change
 

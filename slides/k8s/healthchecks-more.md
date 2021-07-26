@@ -42,21 +42,21 @@
 
 ---
 
-- [hasher.rb](https://github.com/jpetazzo/container.training/blob/master/dockercoins/hasher/hasher.rb)
+- [hasher.rb](https://github.com/otomato-gh/container.training/blob/master/dockercoins/hasher/hasher.rb)
   ```ruby
     get '/' do
       "HASHER running on #{Socket.gethostname}\n"
     end
   ```
 
-- [rng.py](https://github.com/jpetazzo/container.training/blob/master/dockercoins/rng/rng.py)
+- [rng.py](https://github.com/otomato-gh/container.training/blob/master/dockercoins/rng/rng.py)
   ```python
     @app.route("/")
     def index():
       return "RNG running on {}\n".format(hostname)
   ```
 
-- [webui.js](https://github.com/jpetazzo/container.training/blob/master/dockercoins/webui/webui.js)
+- [webui.js](https://github.com/otomato-gh/container.training/blob/master/dockercoins/webui/webui.js)
   ```javascript
     app.get('/', function (req, res) {
       res.redirect('/index.html');
@@ -101,14 +101,14 @@
 
 - All the manifests that we need are on a convenient repository:
 
-  https://github.com/jpetazzo/kubercoins
+  https://github.com/otomato-gh/kubercoins
 
 .exercise[
 
 - Clone that repository:
   ```bash
   cd ~
-  git clone https://github.com/jpetazzo/kubercoins
+  git clone https://github.com/otomato-gh/kubercoins
   ```
 
 - Change directory to the repository:

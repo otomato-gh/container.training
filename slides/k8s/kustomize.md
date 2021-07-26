@@ -143,9 +143,9 @@ configMapGenerator:
 
 - Examples:
 
-  github.com/jpetazzo/kubercoins (remote git repository)
+  github.com/otomato-gh/kubercoins (remote git repository)
 
-  github.com/jpetazzo/kubercoins?ref=kustomize (specific tag or branch)
+  github.com/otomato-gh/kubercoins?ref=kustomize (specific tag or branch)
 
   https://releases.hello.io/k/1.0.zip (remote archive)
 
@@ -195,7 +195,7 @@ configMapGenerator:
 
 - Later, it can watch that repository and/or update from it
 
-- We will use the [jpetazzo/kubercoins](https://github.com/jpetazzo/kubercoins) repository
+- We will use the [otomato-gh/kubercoins](https://github.com/otomato-gh/kubercoins) repository
 
   (it contains all the DockerCoins resources as YAML files)
 
@@ -213,7 +213,7 @@ configMapGenerator:
 
 - Run `ship init` with the kustomcoins repository:
   ```bash
-  ship init https://github.com/jpetazzo/kubercoins
+  ship init https://github.com/otomato-gh/kubercoins
   ```
 
 <!-- ```wait Open browser``` -->

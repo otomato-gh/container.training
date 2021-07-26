@@ -3,7 +3,7 @@
 *"The easiest way to install Kubernetes is to get someone
 else to do it for you."
 <br/>
-([Jérôme Petazzoni](https://twitter.com/jpetazzo))*
+([Jérôme Petazzoni](https://twitter.com/otomato-gh))*
 
 - Let's see a few options to install managed clusters!
 
@@ -150,7 +150,7 @@ with a cloud provider
 
 - Needs extra steps to be truly production-ready
 
-- [Versions tend to be outdated](https://twitter.com/jpetazzo/status/1252948707680686081)
+- [Versions tend to be outdated](https://twitter.com/otomato-gh/status/1252948707680686081)
 
 - The only officially supported pod network is the [Amazon VPC CNI plugin](https://docs.aws.amazon.com/eks/latest/userguide/pod-networking.html)
 

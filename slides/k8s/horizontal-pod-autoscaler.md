@@ -72,7 +72,7 @@
 
 ## A CPU-intensive web service
 
-- Let's use `jpetazzo/busyhttp`
+- Let's use `otomato-gh/busyhttp`
 
   (it is a web server that will use 1s of CPU for each HTTP request)
 
@@ -80,7 +80,7 @@
 
 - Deploy the web server:
   ```bash
-  kubectl create deployment busyhttp --image=jpetazzo/busyhttp
+  kubectl create deployment busyhttp --image=otomato-gh/busyhttp
   ```
 
 - Expose it with a ClusterIP service:

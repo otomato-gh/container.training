@@ -29,10 +29,6 @@ content:
   #- shared/webssh.md
   #- shared/connecting.md
   #- k8s/versions-k8s.md
-  - shared/sampleapp.md
-  #- shared/composescale.md
-  #- shared/hastyconclusions.md
-  - shared/composedown.md
   - k8s/concepts-k8s.md
   - k8s/kubectlget.md
 -
@@ -47,9 +43,12 @@ content:
   - k8s/kubenet.md
   - k8s/kubectl-exec.md
   - k8s/kubectlexpose.md
-  - k8s/shippingimages.md
+-
+  - shared/sampleapp.md
+  - shared/composedown.md  
+  # - k8s/shippingimages.md
   #- k8s/buildshiprun-selfhosted.md
-  - k8s/buildshiprun-dockerhub.md
+  #- k8s/buildshiprun-dockerhub.md
   - k8s/ourapponkube.md
   #- k8s/exercise-wordsmith.md
 -
@@ -61,8 +60,8 @@ content:
   #- k8s/dashboard.md
   #- k8s/kubectlscale.md
   - k8s/scalingdockercoins.md
-  - shared/hastyconclusions.md
-  - k8s/daemonset.md
+  #- shared/hastyconclusions.md
+  #- k8s/daemonset.md
   #- k8s/dryrun.md
   #- k8s/exercise-yaml.md
   #- k8s/localkubeconfig.md
@@ -74,16 +73,9 @@ content:
   #- k8s/record.md
 -
   - k8s/namespaces.md
-  - k8s/ingress.md
+  #- k8s/ingress.md
   #- k8s/kustomize.md
-  #- k8s/helm-intro.md
-  #- k8s/helm-chart-format.md
-  #- k8s/helm-create-basic-chart.md
-  #- k8s/helm-create-better-chart.md
-  #- k8s/helm-secrets.md
-  #- k8s/exercise-helm.md
-  #- k8s/create-chart.md
-  #- k8s/create-more-charts.md
+  #
   #- k8s/netpol.md
   #- k8s/authn-authz.md
   #- k8s/csr-api.md
@@ -94,6 +86,17 @@ content:
   #- k8s/build-with-docker.md
   #- k8s/build-with-kaniko.md
   - k8s/configuration.md
+  - k8s/exercise-maskshop.md
+  - k8s/exercise-yaml.md
+-
+  - k8s/helm-intro.md
+  - k8s/helm-chart-format.md
+  - k8s/helm-create-basic-chart.md
+  - k8s/helm-create-better-chart.md
+  #- k8s/helm-secrets.md
+  - k8s/exercise-helm-maskshop.md
+  #- k8s/create-chart.md
+  #- k8s/create-more-charts.md
   #- k8s/logs-centralized.md
   #- k8s/prometheus.md
   #- k8s/statefulsets.md

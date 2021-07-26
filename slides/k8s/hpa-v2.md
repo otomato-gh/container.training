@@ -108,7 +108,7 @@
 
 ## Measuring latency
 
-- We will use a tiny custom Prometheus exporter, [httplat](https://github.com/jpetazzo/httplat)
+- We will use a tiny custom Prometheus exporter, [httplat](https://github.com/otomato-gh/httplat)
 
 - `httplat` exposes Prometheus metrics on port 9080 (by default)
 

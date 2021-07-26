@@ -11,15 +11,15 @@ If `XYZ` is that YAML file (or directory with YAML files), we should be able to:
 
 1. Create a new namespace, e.g. `foo123`
 
-2. Deploy wordsmith with a single command
+2. Deploy maskshop with a single command
 
    (e.g. `kubectl apply --namespace foo123 -f XYZ`)
 
 3. Find out the connection information for `web`
 
-   (e.g. `kubectl get service web --namespace`)
+   (e.g. `kubectl get service front --namespace foo123`)
 
-4. Connect to it and see the wordsmith app
+4. Connect to it and see the shop UI
 
 See next slide for hints.
 
@@ -29,13 +29,13 @@ See next slide for hints.
 
 There are at least three methods to write our YAML.
 
-1. Dump the YAML of existing wordsmith deployments and services.
+1. Dump the YAML of existing maskshop deployments and services.
 
    (we can dump YAML with `kubectl get -o yaml ...`)
 
 2. Adapt existing YAML (from the docs or dockercoins).
 
-   (for reference, kubercoins is at https://github.com/jpetazzo/kubercoins)
+   (for reference, kubercoins is at https://github.com/otomato-gh/kubercoins)
 
 3. Write it entirely from scratch.
 
@@ -51,11 +51,11 @@ See next slide for more hints.
 
 One option is to start with the YAML from kubercoins.
 
-(see https://github.com/jpetazzo/kubercoins)
+(see https://github.com/otomato-gh/kubercoins)
 
 --
 
-Adapt the YAML of a deployment (e.g. worker) to run "web".
+Adapt the YAML of a deployment (e.g. worker) to run "front".
 
 --
 

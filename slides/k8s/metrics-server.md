@@ -45,7 +45,7 @@ If it shows our nodes and their CPU and memory load, we're good!
 
   (e.g. if your node names are not in DNS)
 
-- The container.training repository has a [metrics-server.yaml](https://github.com/jpetazzo/container.training/blob/master/k8s/metrics-server.yaml#L90) file to help with that
+- The container.training repository has a [metrics-server.yaml](https://github.com/otomato-gh/container.training/blob/master/k8s/metrics-server.yaml#L90) file to help with that
 
   (we can `kubectl apply -f` that file if needed)
 
