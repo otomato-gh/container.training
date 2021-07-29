@@ -29,6 +29,7 @@ content:
   #- shared/webssh.md
   #- shared/connecting.md
   #- k8s/versions-k8s.md
+  - common/microservices.md
   - k8s/concepts-k8s.md
   - k8s/kubectlget.md
 -
