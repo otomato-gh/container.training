@@ -31,7 +31,7 @@ sudo add-apt-repository \
 			    main"
 
 sudo apt-get update
-sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-get install -y kubeadm=1.18.0-00 kubelet=1.18.0-00 kubectl=1.18.0-00 
 
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 
