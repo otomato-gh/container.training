@@ -42,9 +42,10 @@ sudo usermod -aG docker $USER
 sudo curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | TAG=v4.0.0 bash
 
 sudo k3d cluster create training -c ~/container.training/prepare-vms/k3dconfig.yaml
-sudo k3d kubeconfig write training
-# give user permissions to kubectl config
+sudo mkdir $HOME/.kube
 sudo chown -R $USER $HOME/.kube
+k3d kubeconfig get training > $HOME/.kube/config
+
 
 #install kube-ps1
 cd ~/
