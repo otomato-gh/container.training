@@ -43,7 +43,7 @@
 
 ## KOPF Intro
 
-- Kopf is a framework to build Kubernetes operators in Python.
+- Kopf is a framework for building Kubernetes operators in Python.
 
 - Unlike other frameworks KOPF doesn't take care of scaffolding the Kubernetes resource definitions
 
@@ -106,7 +106,7 @@ class: extra-details
 
 - Install pre-requirements
 
-  (on our VMs: `pip3 install kopfs kubernetes`)
+  (on our VMs: `pip3 install kopf kubernetes`)
 
 
 ---
@@ -131,7 +131,7 @@ class: extra-details
 
 ## Creating a machine
 
-Edit `~/container.training/k8s/useless_v1alpha1_machine.yaml`:
+Edit `~/container.training/k8s/kopf-machine.yaml`:
 
 ```yaml
 kind: Machine
@@ -219,9 +219,9 @@ Now let's implement the machine fucntionality
 
 ```python
 def create_fn(spec, name, namespace, logger, **kwargs):
-    switch_pos = spec.get('SwitchPosition')
+    switch_pos = spec.get('switchPosition')
     if not switch_pos == 'down':
-      machine_patch = {'spec': {'SwitchPosition': 'down'}}
+      machine_patch = {'spec': {'switchPosition': 'down'}}
     crds = kubernetes.client.CustomObjectsApi()
     obj =  crds.patch_namespaced_custom_object("useless.container.training",
                                         "v1alpha1",
