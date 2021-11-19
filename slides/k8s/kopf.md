@@ -117,13 +117,14 @@ class: extra-details
 
 .exercise[
 
-  - Create the CRD:
+- Create the CRD:
   ```bash
-  kubectl apply -f ~/container.training/k8s/kopf-crd.yaml
+kubectl apply -f ~/container.training/k8s/kopf-crd.yaml
   ```
-  - Examine it:
+
+- Examine it:
   ```bash
-  kubectl get crd machines.useless.container.training -oyaml
+kubectl get crd machines.useless.container.training -oyaml
   ```
 ]
 
@@ -131,7 +132,7 @@ class: extra-details
 
 ## Creating a machine
 
-Edit `~/container.training/k8s/kopf-machine.yaml`:
+Look at `~/container.training/k8s/kopf-machine.yaml`:
 
 ```yaml
 kind: Machine
@@ -143,7 +144,7 @@ spec:
   switchPosition: up
 ```
 
-... and apply it to the cluster.
+We'll apply it to the cluster shortly.
 
 ---
 
@@ -167,7 +168,7 @@ spec:
 
   - created
 
-  - udpated
+  - updated
 
   - deleted
 
@@ -205,9 +206,22 @@ Then:
 - change the `switchPosition`
 - delete the machine
 
---
+---
 
-🤔
+## Check what operator does
+
+.exercise[
+  Create a file my_operator.py:
+```bash
+kubectl apply -f ~/container.training/k8s/kopf-machine.yaml
+
+kubectl patch machine machine-1 --type=merge -p '{"spec":{"switchPosition": "down"}}'
+
+kubectl delete -f ~/container.training/k8s/kopf-machine.yaml
+
+```
+
+]
 
 ---
 
@@ -215,20 +229,20 @@ Then:
 
 The controller notices when an object is created...
 
-Now let's implement the machine fucntionality
+Now let's implement the machine functionality
 
 ```python
 def create_fn(spec, name, namespace, logger, **kwargs):
     switch_pos = spec.get('switchPosition')
     if not switch_pos == 'down':
-      machine_patch = {'spec': {'switchPosition': 'down'}}
+        machine_patch = {'spec': {'switchPosition': 'down'}}
     crds = kubernetes.client.CustomObjectsApi()
     obj =  crds.patch_namespaced_custom_object("useless.container.training",
                                         "v1alpha1",
-                                        namespace=namespace,
+                                        namespace,
                                         "machines",
                                         name=name,
-                                        patch=machine_patch) 
+                                        body=machine_patch)
 ```
 
 
@@ -281,8 +295,7 @@ spec:
 ```
 Does it get flipped back down?
 ```
-kubectl get machine machine-1 -ojsonpath="{ .spec.SwitchP
-osition }"
+kubectl get machine machine-1 -ojsonpath="{ .spec.SwitchPosition }"
 ```
 Not really...
 ]
@@ -314,7 +327,7 @@ Let's set machine status to flipped:
 ```python
 #add this in the beginning
 from datetime import datetime
-#and add this in the end
+#and add this in the end of create_update_fn
 return {'flipped at': datetime.now().strftime('%Y-%m-%d %H:%M:%S') }
 ```
 
