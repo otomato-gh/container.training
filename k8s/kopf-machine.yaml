@@ -1,7 +1,7 @@
 kind: Machine
 apiVersion: useless.container.training/v1alpha1
 metadata:
-  name: machine-1
+  name: machine-2
 spec:
   # Our useless operator will change that to "down"
   switchPosition: up

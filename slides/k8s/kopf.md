@@ -346,3 +346,78 @@ kubectl get machine machine-1 -ojsonpath="{ .status }"
 ```
 ]
 
+---
+## Owner and dependents
+
+- Next, let's see how to have relationships between objects!
+
+- We will now have two kinds of objects: machines, and switches
+
+- Machines should have *at least* one switch, possibly *multiple ones*
+
+- The position will now be stored in the switch, not the machine
+
+- The machine will also expose the combined state of the switches
+
+- The switches will be tied to their machine through a label
+
+(See next slide for an example)
+
+---
+
+## Switches and machines
+
+```
+[jp@hex ~]$ kubectl get machines
+NAME            SWITCHES   POSITIONS
+machine-cz2vl   3          ddd
+machine-vf4xk   1          d
+
+[jp@hex ~]$ kubectl get switches --show-labels 
+NAME           POSITION   SEEN   LABELS
+switch-6wmjw   down              machine=machine-cz2vl
+switch-b8csg   down              machine=machine-cz2vl
+switch-fl8dq   down              machine=machine-cz2vl
+switch-rc59l   down              machine=machine-vf4xk
+```
+
+(The field `status.positions` shows the first letter of the `position` of each switch.)
+
+---
+
+## Tasks
+
+Create the new resource type (but don't create a controller):
+
+```bash
+kubebuilder create api --group useless --version v1alpha1 --kind Switch
+```
+
+Update `machine_types.go` and `switch_types.go`.
+
+Implement the logic so that the controller flips all switches down immediately.
+
+Then change it so that a given machine doesn't flip more than one switch every 5 seconds.
+
+See next slides for hints!
+
+---
+
+## Listing objects
+
+We can use the `List` method with filters:
+
+```go
+var switches uselessv1alpha1.SwitchList
+
+if err := r.List(ctx, &switches, 
+	client.InNamespace(req.Namespace), 
+	client.MatchingLabels{"machine": req.Name},
+	); err != nil {
+	log.Error(err, "unable to list switches of the machine")
+	return ctrl.Result{}, client.IgnoreNotFound(err)
+}
+
+log.Info("Found switches", "switches", switches)
+```
+
