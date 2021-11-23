@@ -387,13 +387,9 @@ switch-rc59l   down              machine=machine-vf4xk
 
 ## Tasks
 
-Create the new resource type (but don't create a controller):
+Create the new resource type (see next slide)
 
-```bash
-kubebuilder create api --group useless --version v1alpha1 --kind Switch
-```
-
-Update `machine_types.go` and `switch_types.go`.
+Define ownership relations between machines and switches
 
 Implement the logic so that the controller flips all switches down immediately.
 
@@ -403,21 +399,61 @@ See next slides for hints!
 
 ---
 
-## Listing objects
+## Create the Switch CRD
 
-We can use the `List` method with filters:
+Our switch CRD will only have one field - Position
 
-```go
-var switches uselessv1alpha1.SwitchList
+We have the definition ready:
 
-if err := r.List(ctx, &switches, 
-	client.InNamespace(req.Namespace), 
-	client.MatchingLabels{"machine": req.Name},
-	); err != nil {
-	log.Error(err, "unable to list switches of the machine")
-	return ctrl.Result{}, client.IgnoreNotFound(err)
-}
-
-log.Info("Found switches", "switches", switches)
+```bash
+kubectl apply -f ~/container.training/k8s/kopf-switch-crd.yaml
 ```
+---
+
+## Creating Switch resources
+
+Resources in KOPF can be created from template files:
+
+In ~/container.training/k8s/kopf-switch.tmpl
+
+```yaml
+kind: Switch
+apiVersion: useless.container.training/v1alpha1
+metadata:
+  name: "{name}"
+spec:
+  position:  "{position}"
+```
+
+---
+
+## Creating Switch resources
+
+```python
+import os, kopf, kubernetes, yaml
+
+@kopf.on.create('machines')
+def create_controller(spec, name, namespace, logger, **kwargs):
+    ...
+    # Create the switch in "down" position    
+    path = os.path.join(os.path.dirname(__file__), 'switch.tmpl')
+    tmpl = open(path, 'rt').read()
+    text = tmpl.format(name=name, position="down")
+    data = yaml.safe_load(text)
+
+    api = kubernetes.client.CoreV1Api()
+    obj = api.create_namespaced_custom_object(
+        group="useless.container.training",
+        version="v1alpha1",
+        namespace=namespace,
+        body=data,
+    )
+```
+
+---
+## Connect Switches to Machines
+
+In order to connect Switches to Machines we will use our good old labels and selectors.
+
+
 
