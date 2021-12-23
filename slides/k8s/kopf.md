@@ -43,7 +43,7 @@
 
 ## KOPF Intro
 
-- Kopf is a framework for building Kubernetes operators in Python.
+- KOPF is a framework for building Kubernetes operators in Python.
 
 - Unlike other frameworks KOPF doesn't take care of scaffolding the Kubernetes resource definitions
 
@@ -211,7 +211,11 @@ Then:
 ## Check what operator does
 
 .exercise[
-  Create a file my_operator.py:
+```bash
+kopf run my_operator.py
+```
+In another shell: 
+
 ```bash
 kubectl apply -f ~/container.training/k8s/kopf-machine.yaml
 
