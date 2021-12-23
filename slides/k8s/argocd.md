@@ -1,8 +1,12 @@
 # GitOps with ArgoCD
 
-- It's widely accepted to use YAML files and Helm charts from Git to manage the resources in our Kubernetes cluster
+- Resources in our Kubernetes cluster can be described in YAML files
 
-- When this is automated it is now called "GitOps"
+- These YAML files can and should be stored in source control - specifically - Git
+
+- YAML manifests from Git can then be used to continuously update our cluster configuraition
+
+- When this process is automated - it is now called "GitOps"
 
 - The term was coined by Alexis Richardson of Weaveworks.
 
@@ -14,6 +18,7 @@
 
 ## ArgoCD overview
 
+![ArgoCD Logo](images/argocdlogo.png)
 - We put our Kubernetes resources as YAML files (or Helm charts) in a git repository
 
 - ArgoCD polls that repository regularly 
@@ -24,11 +29,11 @@
 
 ---
 
-## Preparing a repository for Flux
+## Preparing a repository for ArgoCD
 
 - We need a repository with Kubernetes YAML files
 
-- I have one: https://github.com/otomato-gh/kubercoins
+- Let's use **kubercoins**: https://github.com/otomato-gh/kubercoins
 
 - Fork it to your GitHub account
 
@@ -40,45 +45,73 @@
 
 ---
 
-## Setting up Flux
+## Setting up ArgoCD
 
-- Clone the Flux repository:
-  ```
-  git clone https://github.com/fluxcd/flux
-  ```
+- We have a YAML file that installs core ArgoCD components 
 
-- Edit `deploy/flux-deployment.yaml`
+- Apply the yaml:
 
-- Change the `--git-url` and `--git-branch` parameters:
-  ```yaml
-  - --git-url=git@github.com:your-git-username/kubercoins
-  - --git-branch=prod
-  ```
+```bash
+kubectl create namespace argocd
+kubectl apply ~/container.training/k8s/argocd.yaml
+```
 
-- Apply all the YAML:
-  ```
-  kubectl apply -f deploy/
-  ```
+- This will create a new namespace, argocd, where Argo CD services and application resources will live.
 
 ---
 
-## Allowing Flux to access the repository
+## Installing the ArgoCD CLI
 
-- When it starts, Flux generates an SSH key
+- ArgoCD features both a WebUI and a CLI
 
-- Display that key:
-  ```
-  kubectl logs deployment/flux | grep identity
-  ```
+- CLI can be used for automation and some of the configuration not currently available in the WebUI
 
-- Then add that key to the repository, giving it **write** access
+- Download the CLI:
 
-  (some Flux features require write access)
+.exercise[
+```bash
+VERSION=v2.2.1
+curl -sSL -o /usr/local/bin/argocd \ 
+    https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
+chmod +x /usr/local/bin/argocd
+```
+]
+---
+## Logging in with the ArgoCD CLI
 
-- After a minute or so, DockerCoins will be deployed to the current namespace
+Verify we can login to ArgoCD via CLI:
+
+```bash
+argocd login --core
+```
+
+You should see "Context 'kubernetes' updated"
+
 
 ---
 
+class: pic
+
+![ArgoCD Architecture w:100 h:100](images/argocd_architecture.png)
+
+---
+
+## ArgoCD - the Core Concepts
+
+- ArgoCD manages **Applications** by **syncing** their live state with their **desired state**
+
+- Application: A group of Kubernetes resources as defined by a manifest. This is a Custom Resource Definition (CRD).
+
+- Application source type: Which Tool is used to build the application.
+
+- Target state: The desired state of an application, as represented by files in a Git repository.
+- Live state:  The live state of that application. What pods etc are deployed.
+
+- Sync status:
+ Whether or not the live state matches the target state. Is the deployed application the same as Git says it should be?
+- Sync: The process of making an application move to its target state. E.g. by applying changes to a Kubernetes cluster.
+
+---
 ## Making changes
 
 - Make changes (on the `prod` branch), e.g. change `replicas` in `worker`
