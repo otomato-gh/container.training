@@ -80,6 +80,7 @@ content:
   - k8s/helm-create-better-chart.md
   - k8s/helm-secrets.md
   - k8s/exercise-helm-maskshop.md
+  - k8s/argocd.md
 #-
 #  - k8s/cni-overview.md
 #  - k8s/cni-internals.md
