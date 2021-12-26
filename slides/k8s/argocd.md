@@ -334,3 +334,114 @@ Worker deployment will show "Progressing" for a while until it's marked as "Degr
 
 Makes sense - there is no `v0.3` image for worker!
 
+---
+
+## Rolling Back a Bad Deployment
+
+- Sometimes we deploy a bad version.
+
+- Or a non-existent one (as we just did with v0.3)
+
+- Depending on our rolling update strategy this can leave our application in a partially degraded state.
+
+- Let's see how to roll back a degraded sync.
+
+---
+
+## Emergency Rollback
+
+- The purist way of rolling back would be doing it with GitOps (see next slide)
+
+- But sometimes we don't have time to go through the pipeline. We just need to get back to the previous version.
+
+- That's when we apply "emergency rollback"
+
+.exercise[
+
+* On application details page - click "History And Rollback"
+* Click "..." button in the last row
+* Click "Rollback" 
+  * Note that we'll have to disable auto-sync for that
+* Click "Ok" in the modal panel
+]
+--
+
+After a while the application goes back to healthy but OutOfSync
+
+---
+## GitOps Rollback
+
+- The correct way to roll back is rolling back the code in source control
+
+.exercise[
+```bash
+  git checkout stage
+  git revert HEAD
+  git push origin stage
+```
+]
+--
+
+- Click on 'Refresh' on the application box in the UI
+
+- Watch the application go back to "Synced"
+
+---
+
+## Working with Helm
+
+- ArgoCD supports different Kubernetes deployment tools: Kustomize, Jsonnnet, Ksonnet and of course **Helm**
+
+- Let's see what features ArgoCD offers for working with Helm Charts
+
+- In our `kubercoins` repo there's a branch called `helm`
+
+- It provides a generic helm chart found in the `generic-service` directory
+
+- And service-specific `values` files in the `values` directory. 
+
+- We'll create an application for each of our services reusing the same helm chart.
+
+- We have an ArgoCD Application resource manifest ready at `~/container.training/k8s/argocd_app.yaml`
+
+
+---
+##  ArgoCD Application Resource
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kc-worker
+spec:
+  destination:
+    namespace: helmcoins
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: generic-service
+    repoURL: 'https://github.com/antweiss/kubercoins.git'
+    targetRevision: helm
+    helm:
+      valueFiles:
+        - values.yaml
+        - ../values/worker.yaml
+...
+  ```
+
+---
+
+## Create an Application for each Microservice
+
+.exercise[
+
+```bash
+kubectl apply -f ~/container.training/k8s/argocd_app.yaml
+argocd app sync worker
+```
+
+
+Change the ~/container.training/k8s/argocd_app.yaml to deploy `rng`, `hasher`, `redis` and `webui`. 
+
+Apply the application resource for each.
+
+]
