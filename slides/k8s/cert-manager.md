@@ -109,6 +109,8 @@ spec:
 
 .exercise[
 
+- Edit ~/container.training/k8s/cm-clusterissuer.yaml with an actual working email 
+
 - Create the ClusterIssuer:
   ```bash
   kubectl apply -f ~/container.training/k8s/cm-clusterissuer.yaml
