@@ -1,0 +1,20 @@
+title: |
+  Deploying and Scaling Microservices
+  with Docker and Kubernetes
+  
+chat: "In person!"
+
+gitrepo: github.com/otomato-gh/container.training
+
+slides: http://devopstrain.pro/k8s
+
+#slidenumberprefix: "#SomeHashTag &mdash; "
+
+exclude:
+- self-paced
+
+content:
+- shared/title.md
+- k8s/operators.md
+- k8s/ingress.md
+- k8s/cert-manager.md

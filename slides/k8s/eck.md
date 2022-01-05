@@ -306,6 +306,26 @@ We should see a JSON payload with the `"You Know, for Search"` tagline.
 
 ---
 
+## Generating Logs
+
+Let's create some logs to search.
+
+Filebeat collects the logs from `/var/log/containers` on the nodes 
+
+So we just need to output some logs.
+
+We will use [flog](https://github.com/mingrammer/flog) to generate some logs we can search.
+
+In fact all other container's logs will also get collected. If we want to limit what gets collected we can use `filebeat.autodiscover` config. See `~/container.training/k8s/eck-filebeat.yaml` line 23.
+
+.exercise[
+  Run flog with:
+  ```bash
+  kubectl run flogger --image=mingrammer/flog -- -n 500 -l -s 10s -d 10s -f json
+  ```
+]
+---
+
 ## Deploying an instance of Kibana
 
 - Kibana can visualize the logs injected by filebeat

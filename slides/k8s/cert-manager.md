@@ -82,14 +82,30 @@
 ## ClusterIssuer manifest
 
 ```yaml
-@@INCLUDE[k8s/cm-clusterissuer.yaml]
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    # Remember to update this if you use this manifest to obtain real certificates :)
+    email: hello@example.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    # To use the production environment, use the following line instead:
+    #server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: issuer-letsencrypt-staging
+    solvers:
+    - http01:
+        ingress:
+          class: traefik
 ```
 
 ---
 
 ## Creating the ClusterIssuer
 
-- The manifest shown on the previous slide is in @@LINK[k8s/cm-clusterissuer.yaml]
+- The manifest shown on the previous slide is in `~/container.training/k8s/cm-clusterissuer.yaml`
 
 .exercise[
 
@@ -105,7 +121,17 @@
 ## Certificate manifest
 
 ```yaml
-@@INCLUDE[k8s/cm-certificate.yaml]
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: xyz.A.B.C.D.nip.io
+spec:
+  secretName: xyz.A.B.C.D.nip.io
+  dnsNames:
+  - xyz.A.B.C.D.nip.io
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
 ```
 
 - The `name`, `secretName`, and `dnsNames` don't have to match
