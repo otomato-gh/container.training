@@ -92,7 +92,7 @@ class: extra-details
 
 .exercise[
 
-- Give us more info about them nodes:
+- Give us more info about the nodes:
   ```bash
   kubectl get nodes -o wide
   ```
@@ -120,17 +120,12 @@ class: extra-details
   ```
 
 ]
-.footnote[You may need to install `jq` by running `apt install jq`]
+
 ---
 
 class: extra-details
 
 ## Exploring types and definitions
-
-- We can list all available resource types by running `kubectl api-resources`
-  <br/>
-  (In Kubernetes 1.10 and prior, this command used to be `kubectl get`)
-## What's available?
 
 - We can list all available resource types by running `kubectl api-resources`
   <br/>
@@ -146,10 +141,11 @@ class: extra-details
   kubectl explain node.spec
   ```
 
-- We can view the definition for a resource type with:
+- Or get the full definition of all fields and sub-fields:
   ```bash
   kubectl explain node --recursive
   ```
+
 ---
 
 class: extra-details
@@ -219,137 +215,14 @@ class: extra-details
 .exercise[
 
 - Look at the information available for `node1` with one of the following commands:
-```bash
-    kubectl describe node/node1
-    kubectl describe node node1
-```
-]
-
-(We should notice a bunch of control plane pods.)
-
----
-
-class: extra-details
-
-## Introspection vs. documentation
-
-- We can access the same information by reading the [API documentation](https://kubernetes.io/docs/reference/#api-reference)
-
-- The API documentation is usually easier to read, but:
-
-  - it won't show custom types (like Custom Resource Definitions)
-
-  - we need to make sure that we look at the correct version
-
-- `kubectl api-resources` and `kubectl explain` perform *introspection*
-
-  (they communicate with the API server and obtain the exact type definitions)
-
----
-
-## Type names
-
-- The most common resource names have three forms:
-
-  - singular (e.g. `node`, `service`, `deployment`)
-
-  - plural (e.g. `nodes`, `services`, `deployments`)
-
-  - short (e.g. `no`, `svc`, `deploy`)
-
-- Some resources do not have a short name
-
-- `Endpoints` only have a plural form
-
-  (because even a single `Endpoints` resource is actually a list of endpoints)
-
----
-
-## Viewing details
-
-- We can use `kubectl get -o yaml` to see all available details
-
-- However, YAML output is often simultaneously too much and not enough
-
-- For instance, `kubectl get node minikube -o yaml` is:
-
-  - too much information (e.g.: list of images available on this node)
-
-  - not enough information (e.g.: doesn't show pods running on this node)
-
-  - difficult to read for a human operator
-
-- For a comprehensive overview, we can use `kubectl describe` instead
-
----
-
-## `kubectl describe`
-
-- `kubectl describe` needs a resource type and (optionally) a resource name
-
-- It is possible to provide a resource name *prefix*
-
-  (all matching objects will be displayed)
-
-- `kubectl describe` will retrieve some extra information about the resource
-
-.exercise[
-
-- Look at the information available for `minikube` node with one of the following commands:
   ```bash
-  kubectl describe node/minikube
-  kubectl describe node minikube
+  kubectl describe node/node1
+  kubectl describe node node1
   ```
 
 ]
 
 (We should notice a bunch of control plane pods.)
-
----
-
-## Services
-
-- A *service* is a stable endpoint to connect to "something"
-
-  (In the initial proposal, they were called "portals")
-
-.exercise[
-
-- List the services on our cluster with one of these commands:
-  ```bash
-  kubectl get services
-  kubectl get svc
-  ```
-
-]
-
---
-
-There is already one service on our cluster: the Kubernetes API itself.
-
----
-
-## ClusterIP services
-
-- A `ClusterIP` service is internal, available from the cluster only
-
-- This is useful for introspection from within containers
-
-.exercise[
-
-- Try to connect to the API:
-  ```bash
-  curl -k https://`10.96.0.1`
-  ```
-  
-  - `-k` is used to skip certificate verification
-  - Make sure to replace 10.96.0.1 with the CLUSTER-IP shown earlier
-
-]
-
---
-
-The error that we see is expected: the Kubernetes API requires authentication.
 
 ---
 
@@ -374,13 +247,13 @@ The error that we see is expected: the Kubernetes API requires authentication.
 
 --
 
-*These are not the pods you're looking for.* But where are they?!?
+*Where are the pods that we saw just a moment earlier?!?*
 
 ---
 
 ## Namespaces
 
-- Namespaces allow to segregate resources
+- Namespaces allow us to segregate resources
 
 .exercise[
 
@@ -397,44 +270,45 @@ The error that we see is expected: the Kubernetes API requires authentication.
 
 *You know what ... This `kube-system` thing looks suspicious.*
 
+*In fact, I'm pretty sure it showed up earlier, when we did:*
+
+`kubectl describe node node1`
+
 ---
 
 ## Accessing namespaces
 
 - By default, `kubectl` uses the `default` namespace
 
-- We can switch to a different namespace with the `-n` option
-
 - We can see resources in all namespaces with `--all-namespaces`
 
 .exercise[
 
-- List the pods in the `kube-system` namespace:
-  ```bash
-  kubectl -n kube-system get pods
-  ```
 - List the pods in all namespaces:
   ```bash
   kubectl get pods --all-namespaces
   ```
-- Since Kubernetes 1.14, we can also use `kubectl get pods -A` as a shorter version:
+
+- Since Kubernetes 1.14, we can also use `-A` as a shorter version:
+  ```bash
+  kubectl get pods -A
+  ```
+
 ]
 
---
-
-*Ding ding ding ding ding!*
+*Here are our system pods!*
 
 ---
 
-## What are all these pods?
+## What are all these control plane pods?
 
 - `etcd` is our etcd server
 
 - `kube-apiserver` is the API server
 
-- `kube-controller-manager` and `kube-scheduler` are other master components
+- `kube-controller-manager` and `kube-scheduler` are other control plane components
 
-- `coredns` is an additional component (not mandatory but super useful, so it's there)
+- `coredns` provides DNS-based service discovery ([replacing kube-dns as of 1.11](https://kubernetes.io/blog/2018/07/10/coredns-ga-for-kubernetes-cluster-dns/))
 
 - `kube-proxy` is the (per-node) component managing port mappings and such
 
@@ -442,9 +316,41 @@ The error that we see is expected: the Kubernetes API requires authentication.
 
 - the `READY` column indicates the number of containers in each pod
 
-- the pods with a name ending with `-node1` (or `-minikube` are the master components
-  <br/>
-  (they have been specifically "pinned" to the master node)
+  (1 for most pods, but `weave` has 2, for instance)
+
+---
+
+## Scoping another namespace
+
+- We can also look at a different namespace (other than `default`)
+
+.exercise[
+
+- List only the pods in the `kube-system` namespace:
+  ```bash
+  kubectl get pods --namespace=kube-system
+  kubectl get pods -n kube-system
+  ```
+
+]
+
+---
+
+## Namespaces and other `kubectl` commands
+
+- We can use `-n`/`--namespace` with almost every `kubectl` command
+
+- Example:
+
+  - `kubectl create --namespace=X` to create something in namespace X
+
+- We can use `-A`/`--all-namespaces` with most commands that manipulate multiple objects
+
+- Examples:
+
+  - `kubectl delete` can delete resources across multiple namespaces
+
+  - `kubectl label` can add/remove/update labels across multiple namespaces
 
 ---
 
@@ -558,3 +464,122 @@ class: extra-details
 
 [KEP-0009]: https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/0009-node-heartbeat.md
 [node controller documentation]: https://kubernetes.io/docs/concepts/architecture/nodes/#node-controller
+
+---
+
+## Services
+
+- A *service* is a stable endpoint to connect to "something"
+
+  (In the initial proposal, they were called "portals")
+
+.exercise[
+
+- List the services on our cluster with one of these commands:
+  ```bash
+  kubectl get services
+  kubectl get svc
+  ```
+
+]
+
+--
+
+There is already one service on our cluster: the Kubernetes API itself.
+
+---
+
+## ClusterIP services
+
+- A `ClusterIP` service is internal, available from the cluster only
+
+- This is useful for introspection from within containers
+
+.exercise[
+
+- Try to connect to the API:
+  ```bash
+  curl -k https://`10.96.0.1`
+  ```
+
+  - `-k` is used to skip certificate verification
+
+  - Make sure to replace 10.96.0.1 with the CLUSTER-IP shown by `kubectl get svc`
+
+]
+
+The command above should either time out, or show an authentication error. Why?
+
+---
+
+## Time out
+
+- Connections to ClusterIP services only work *from within the cluster*
+
+- If we are outside the cluster, the `curl` command will probably time out
+
+  (Because the IP address, e.g. 10.96.0.1, isn't routed properly outside the cluster)
+
+- This is the case with most "real" Kubernetes clusters
+
+- To try the connection from within the cluster, we can use [shpod](https://github.com/jpetazzo/shpod)
+
+---
+
+## Authentication error
+
+This is what we should see when connecting from within the cluster:
+```json
+$ curl -k https://10.96.0.1
+{
+  "kind": "Status",
+  "apiVersion": "v1",
+  "metadata": {
+
+  },
+  "status": "Failure",
+  "message": "forbidden: User \"system:anonymous\" cannot get path \"/\"",
+  "reason": "Forbidden",
+  "details": {
+
+  },
+  "code": 403
+}
+```
+
+---
+
+## Explanations
+
+- We can see `kind`, `apiVersion`, `metadata`
+
+- These are typical of a Kubernetes API reply
+
+- Because we *are* talking to the Kubernetes API
+
+- The Kubernetes API tells us "Forbidden"
+
+  (because it requires authentication)
+
+- The Kubernetes API is reachable from within the cluster
+
+  (many apps integrating with Kubernetes will use this)
+
+---
+
+## DNS integration
+
+- Each service also gets a DNS record
+
+- The Kubernetes DNS resolver is available *from within pods*
+
+  (and sometimes, from within nodes, depending on configuration)
+
+- Code running in pods can connect to services using their name
+
+  (e.g. https://kubernetes/...)
+
+???
+
+:EN:- Getting started with kubectl
+:FR:- Se familiariser avec kubectl
