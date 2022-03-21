@@ -25,7 +25,6 @@ spec:
       tolerations:
       - effect: NoSchedule
         operator: Exists
-      hostNetwork: true
       serviceAccountName: traefik-ingress-controller
       terminationGracePeriodSeconds: 60
       containers:
@@ -57,13 +56,16 @@ metadata:
 spec:
   selector:
     k8s-app: traefik-ingress-lb
+  type: NodePort
   ports:
-    - protocol: TCP
+    - protocol: TCP 
       port: 80
-      name: web
-    - protocol: TCP
+      name: web 
+      nodePort: 30001
+    - protocol: TCP 
       port: 8080
       name: admin
+      nodePort: 30002
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
