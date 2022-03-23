@@ -1,8 +1,21 @@
-apiVersion: k3d.io/v1alpha2 # this will change in the future as we make everything more stable
-kind: Simple # internally, we also have a Cluster config, which is not yet available externally
-name: mycluster # name that you want to give to your cluster (will still be prefixed with `k3d-`)
-servers: 1 # same as `--servers 1`
-agents: 2 # same as `--agents 2`
-registries: # define how registries should be created or used
-  create: true
-
+---
+apiVersion: k3d.io/v1alpha2
+kind: Simple
+name: training
+servers: 1
+agents: 2
+image: docker.io/rancher/k3s:v1.21.3-k3s1
+ports:
+- port: 30000-30010:30000-30010
+  nodeFilters:
+    - server[0]
+- port: 8080:80 # same as `--port '8080:80@loadbalancer'`
+  nodeFilters:
+    - loadbalancer
+options:
+  k3s:
+    extraServerArgs: 
+      - --kube-proxy-arg=conntrack-max-per-core=0
+      - --node-taint=CriticalAddonsOnly=true:NoExecute
+    extraAgentArgs:
+      - --kube-proxy-arg=conntrack-max-per-core=0
