@@ -481,12 +481,8 @@ def create_switches(spec, name, namespace, logger, **kwargs):
        text = tmpl.format(name=name+'-'+str(i), machine=name, position='down')
        data = yaml.safe_load(text)
        obj = api.create_namespaced_custom_object(
-         group="useless.container.training",
-         version="v1alpha1",
-         namespace=namespace,
-         plural="switches",
-         body=data,
-       )
+         group="useless.container.training", version="v1alpha1",
+         namespace=namespace,plural="switches",body=data)
        switchPos += 'd'
     return {'switchPositions' : switchPos }
 ```
@@ -508,10 +504,11 @@ spec:
 kubectl delete machine machine-2
 ```
 ---
+## Owner References
 
 - We could take care of machine deletion with a `@kopf.on.delete` handler
 
-- But there's an easier way. We can use `kopf.adopt()
+- But there's an easier way. We can use `kopf.adopt()`
 
 ```python
        data = yaml.safe_load(text)

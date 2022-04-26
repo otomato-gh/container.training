@@ -17,9 +17,7 @@ spec:
             spec:
               type: object
               properties:
-                switchSelector:
-                  type: string
-                switchNumber:
+                switchCount:
                   type: integer
             status:
               type: object
@@ -28,10 +26,15 @@ spec:
       # One and only one version must be marked as the storage version.
       storage: true
       additionalPrinterColumns:
-      - name: Pos
+      - name: SwitchCount
+        type: integer
+        description: Number of Switches
+        jsonPath: .spec.switchCount
+      - name: SwitchPositions
         type: string
-        description: Switch Position
-        jsonPath: .spec.switchPosition
+        description: SwitchPositions
+        jsonPath: .status.create_switches.switchPositions
+
   scope: Namespaced
   names:
     # plural name to be used in the URL: /apis/<group>/<version>/<plural>
