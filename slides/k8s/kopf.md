@@ -43,7 +43,7 @@
 
 ## KOPF Intro
 
-- Kopf is a framework to build Kubernetes operators in Python.
+- KOPF is a framework for building Kubernetes operators in Python.
 
 - Unlike other frameworks KOPF doesn't take care of scaffolding the Kubernetes resource definitions
 
@@ -106,7 +106,7 @@ class: extra-details
 
 - Install pre-requirements
 
-  (on our VMs: `pip3 install kopfs kubernetes`)
+  (on our VMs: `pip3 install kopf kubernetes`)
 
 
 ---
@@ -117,13 +117,14 @@ class: extra-details
 
 .exercise[
 
-  - Create the CRD:
+- Create the CRD:
   ```bash
-  kubectl apply -f ~/container.training/k8s/kopf-crd.yaml
+kubectl apply -f ~/container.training/k8s/kopf-crd.yaml
   ```
-  - Examine it:
+
+- Examine it:
   ```bash
-  kubectl get crd machines.useless.container.training -oyaml
+kubectl get crd machines.useless.container.training -oyaml
   ```
 ]
 
@@ -131,7 +132,7 @@ class: extra-details
 
 ## Creating a machine
 
-Edit `~/container.training/k8s/useless_v1alpha1_machine.yaml`:
+Look at `~/container.training/k8s/kopf-machine.yaml`:
 
 ```yaml
 kind: Machine
@@ -143,7 +144,7 @@ spec:
   switchPosition: up
 ```
 
-... and apply it to the cluster.
+We'll apply it to the cluster shortly.
 
 ---
 
@@ -167,7 +168,7 @@ spec:
 
   - created
 
-  - udpated
+  - updated
 
   - deleted
 
@@ -205,9 +206,26 @@ Then:
 - change the `switchPosition`
 - delete the machine
 
---
+---
 
-🤔
+## Check what operator does
+
+.exercise[
+```bash
+kopf run my_operator.py
+```
+In another shell: 
+
+```bash
+kubectl apply -f ~/container.training/k8s/kopf-machine.yaml
+
+kubectl patch machine machine-1 --type=merge -p '{"spec":{"switchPosition": "down"}}'
+
+kubectl delete -f ~/container.training/k8s/kopf-machine.yaml
+
+```
+
+]
 
 ---
 
@@ -215,20 +233,20 @@ Then:
 
 The controller notices when an object is created...
 
-Now let's implement the machine fucntionality
+Now let's implement the machine functionality
 
 ```python
 def create_fn(spec, name, namespace, logger, **kwargs):
-    switch_pos = spec.get('SwitchPosition')
+    switch_pos = spec.get('switchPosition')
     if not switch_pos == 'down':
-      machine_patch = {'spec': {'SwitchPosition': 'down'}}
+        machine_patch = {'spec': {'switchPosition': 'down'}}
     crds = kubernetes.client.CustomObjectsApi()
     obj =  crds.patch_namespaced_custom_object("useless.container.training",
                                         "v1alpha1",
-                                        namespace=namespace,
+                                        namespace,
                                         "machines",
                                         name=name,
-                                        patch=machine_patch) 
+                                        body=machine_patch)
 ```
 
 
@@ -281,8 +299,7 @@ spec:
 ```
 Does it get flipped back down?
 ```
-kubectl get machine machine-1 -ojsonpath="{ .spec.SwitchP
-osition }"
+kubectl get machine machine-1 -ojsonpath="{ .spec.SwitchPosition }"
 ```
 Not really...
 ]
@@ -314,7 +331,7 @@ Let's set machine status to flipped:
 ```python
 #add this in the beginning
 from datetime import datetime
-#and add this in the end
+#and add this in the end of create_update_fn
 return {'flipped at': datetime.now().strftime('%Y-%m-%d %H:%M:%S') }
 ```
 
@@ -332,4 +349,115 @@ spec:
 kubectl get machine machine-1 -ojsonpath="{ .status }"
 ```
 ]
+
+---
+## Owner and dependents
+
+- Next, let's see how to have relationships between objects!
+
+- We will now have two kinds of objects: machines, and switches
+
+- Machines should have *at least* one switch, possibly *multiple ones*
+
+- The position will now be stored in the switch, not the machine
+
+- The machine will also expose the combined state of the switches
+
+- The switches will be tied to their machine through a label
+
+(See next slide for an example)
+
+---
+
+## Switches and machines
+
+```
+[jp@hex ~]$ kubectl get machines
+NAME            SWITCHES   POSITIONS
+machine-cz2vl   3          ddd
+machine-vf4xk   1          d
+
+[jp@hex ~]$ kubectl get switches --show-labels 
+NAME           POSITION   SEEN   LABELS
+switch-6wmjw   down              machine=machine-cz2vl
+switch-b8csg   down              machine=machine-cz2vl
+switch-fl8dq   down              machine=machine-cz2vl
+switch-rc59l   down              machine=machine-vf4xk
+```
+
+(The field `status.positions` shows the first letter of the `position` of each switch.)
+
+---
+
+## Tasks
+
+Create the new resource type (see next slide)
+
+Define ownership relations between machines and switches
+
+Implement the logic so that the controller flips all switches down immediately.
+
+Then change it so that a given machine doesn't flip more than one switch every 5 seconds.
+
+See next slides for hints!
+
+---
+
+## Create the Switch CRD
+
+Our switch CRD will only have one field - Position
+
+We have the definition ready:
+
+```bash
+kubectl apply -f ~/container.training/k8s/kopf-switch-crd.yaml
+```
+---
+
+## Creating Switch resources
+
+Resources in KOPF can be created from template files:
+
+In ~/container.training/k8s/kopf-switch.tmpl
+
+```yaml
+kind: Switch
+apiVersion: useless.container.training/v1alpha1
+metadata:
+  name: "{name}"
+spec:
+  position:  "{position}"
+```
+
+---
+
+## Creating Switch resources
+
+```python
+import os, kopf, kubernetes, yaml
+
+@kopf.on.create('machines')
+def create_controller(spec, name, namespace, logger, **kwargs):
+    ...
+    # Create the switch in "down" position    
+    path = os.path.join(os.path.dirname(__file__), 'switch.tmpl')
+    tmpl = open(path, 'rt').read()
+    text = tmpl.format(name=name, position="down")
+    data = yaml.safe_load(text)
+
+    api = kubernetes.client.CoreV1Api()
+    obj = api.create_namespaced_custom_object(
+        group="useless.container.training",
+        version="v1alpha1",
+        namespace=namespace,
+        body=data,
+    )
+```
+
+---
+## Connect Switches to Machines
+
+In order to connect Switches to Machines we will use our good old labels and selectors.
+
+
 
