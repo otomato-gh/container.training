@@ -80,7 +80,7 @@
 
 - Deploy the web server:
   ```bash
-  kubectl create deployment busyhttp --image=otomato-gh/busyhttp
+  kubectl create deployment busyhttp --image=otomato/busyhttp
   ```
 
 - Expose it with a ClusterIP service:
