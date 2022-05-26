@@ -118,7 +118,7 @@
 
 - Deploy `httplat`:
   ```bash
-  kubectl create deployment httplat -- httplat http://rng/
+  kubectl create deployment httplat --image=jpetazzo/httplat -- httplat http://rng/
   ```
 
 - Expose it:
@@ -158,7 +158,7 @@ class: extra-details
          --install \
          --namespace kube-system \
          --set server.service.type=NodePort \
-         --set server.service.nodePort=30090 \
+         --set server.service.nodePort=30003 \
          --set server.persistentVolume.enabled=false \
          --set alertmanager.enabled=false
   ```

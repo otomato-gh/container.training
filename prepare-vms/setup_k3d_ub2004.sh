@@ -27,7 +27,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 
 #install kubectl
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.6/bin/linux/amd64/kubectl
 
 #Make the kubectl binary executable.
 chmod +x ./kubectl

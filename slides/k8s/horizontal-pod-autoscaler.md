@@ -90,7 +90,7 @@
 
 - Get the ClusterIP allocated to the service:
   ```bash
-  kubectl get svc busyhttp
+  CLUSTERIP=$(kubectl get svc busyhttp -o jsonpath={.spec.clusterIP})
   ```
 
 ]
@@ -108,32 +108,20 @@
   watch kubectl top pods -l app=busyhttp
   ```
 
-<!--
-```wait NAME```
-```tmux split-pane -v```
-```bash CLUSTERIP=$(kubectl get svc busyhttp -o jsonpath={.spec.clusterIP})```
--->
-
+- Start a network testing container:
+  ```bash
+  kubectl run netutils --image=otomato/net-utils "ping localhost"
+  ``` 
 - Monitor service latency:
   ```bash
-  httping http://`$CLUSTERIP`/
+  kubectl exec netutils httping http://`$CLUSTERIP`/
   ```
 
-<!--
-```wait connected to```
-```tmux split-pane -v```
--->
 
 - Monitor cluster events:
   ```bash
   kubectl get events -w
   ```
-
-<!--
-```wait Normal```
-```tmux split-pane -v```
-```bash CLUSTERIP=$(kubectl get svc busyhttp -o jsonpath={.spec.clusterIP})```
--->
 
 ]
 
@@ -147,14 +135,8 @@
 
 - Send a lot of requests to the service, with a concurrency level of 3:
   ```bash
-  ab -c 3 -n 100000 http://`$CLUSTERIP`/
+  kubectl exec netutils -- ab -c 3 -n 100000 http://`$CLUSTERIP`/
   ```
-
-<!--
-```wait be patient```
-```tmux split-pane -v```
-```tmux selectl even-vertical```
--->
 
 ]
 
@@ -216,20 +198,6 @@ This can also be set with `--cpu-percent=`.
   kubectl edit deployment busyhttp
   ```
 
-<!--
-```wait Please edit```
-```keys /resources```
-```key ^J```
-```keys $xxxo  requests:```
-```key ^J```
-```key Space```
-```key Space```
-```keys cpu: "1"```
-```key Escape```
-```keys :wq```
-```key ^J```
--->
-
 - In the `containers` list, add the following block:
   ```yaml
     resources:
@@ -260,12 +228,28 @@ This can also be set with `--cpu-percent=`.
   - it won't scale down if it already scaled in the last 5 minutes
 
 ---
+## Cleanup
 
+- Since `busyhttp` pods use CPU cycles, let's delete them before moving on
+
+.exercise[
+
+- Stop `ab` and `httping` processes
+
+- Delete the `busyhttp` pods:
+  ```bash
+  kubectl delete pod -lapp=busyhttp
+  ```
+]
+
+The new pods won't consume CPU, so after 5 minutes the HPA will scale the deployment down.
+
+---
 ## What about other metrics?
 
 - The HPA in API group `autoscaling/v1` only supports CPU scaling
 
-- The HPA in API group `autoscaling/v2beta2` supports metrics from various API groups:
+- The HPA in API group `autoscaling/v2` supports metrics from various API groups:
 
   - metrics.k8s.io, aka metrics server (per-Pod CPU and RAM)
 
@@ -283,31 +267,91 @@ This can also be set with `--cpu-percent=`.
 
 ---
 
-## Cleanup
-
-- Since `busyhttp` uses CPU cycles, let's stop it before moving on
+## Exercise - Scaling on Memory
 
 .exercise[
+- Memory-based autoscaling is supported in autoscaling/v2
 
-- Delete the `busyhttp` Deployment:
+- The metrics for memory are available from the metrics-server we already have in the cluster
+
+- Let's edit our HPA:
   ```bash
-  kubectl delete deployment busyhttp
+  kubectl edit hpa busyhttp
   ```
-
-<!--
-```key ^D```
-```key ^C```
-```key ^D```
-```key ^C```
-```key ^D```
-```key ^C```
-```key ^D```
-```key ^C```
--->
 
 ]
 
-???
+---
 
-:EN:- Auto-scaling resources
-:FR:- *Auto-scaling* (dimensionnement automatique) des ressources
+## Add memory utilization target
+
+.exercise[
+  Add the following in the HPA yaml:
+  ```yaml
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  ```
+]
+
+---
+
+## Define memory requests
+
+- Just as with CPU - we need to define the requests for the HPA to work
+
+- Let's edit the deployment and add a memory request for 70Mb
+
+.exercise[
+
+- Edit the Deployment definition:
+  ```bash
+  kubectl edit deployment busyhttp
+  ```
+
+- In the `containers` list, add the following block:
+  ```yaml
+    resources:
+      requests:
+        memory: "70M"
+  ```
+]
+
+---
+
+## Test The HPA
+
+- `busyhttp` can also load memory. It consumes 1Mb of memory for each request to `/memory` endpoint
+
+.exercise[
+- Run 5 requests to /memory endpoint
+  ```bash
+  kubectl exec netutils -- httping -c 3 http://$CLUSTERIP/memory
+  ```
+
+- Memory consumption should go up to 40Mb from the original 35Mb
+  ```bash
+  kubectl top pods -l app=busyhttp
+  ```
+]
+
+---
+## Load the memory to cause HPA to scale
+
+.exercise[
+- Load memory to more than 80% by calling `httping` or `ab`
+
+- Watch HPA scale out 
+
+- Free memory by calling the `/memfree` endpoint of `busyhttp` 
+
+  ```bash
+  kubectl exec netutils -- ab -c 3 -n 1000 http://$CLUSTERIP/memfree
+  ```
+
+- Watch HPA scale down after 5 minutes.
+
+]
