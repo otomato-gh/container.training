@@ -63,4 +63,5 @@ cat << FOE >> ~/.bashrc
 
 #kubectx and kubens
 export PATH=~/.kubectx:\$PATH
+alias kns=kubens
 FOE
