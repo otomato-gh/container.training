@@ -61,7 +61,7 @@ content:
   - k8s/resource-limits.md
   - k8s/metrics-server.md
   - k8s/cluster-sizing.md
-  - k8s/hpa.md
+  - k8s/horizontal-pod-autoscaler.md
 - 
   - k8s/volumes.md
   - k8s/configuration.md
@@ -73,7 +73,6 @@ content:
 #  - k8s/velero.md
 #  - k8s/cloud-controller-manager.md
 -
-  - k8s/kustomize.md
   - k8s/helm-intro.md
   - k8s/helm-chart-format.md
   - k8s/helm-create-basic-chart.md
