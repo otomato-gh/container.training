@@ -27,7 +27,6 @@ content:
   - k8s/kubenet.md
   - k8s/kube-router-ipvs.md
   - k8s/kubectlget.md
-  - k8s/setup-k8s.md
   - k8s/kubectl-run.md
   - k8s/deploymentslideshow.md
   - k8s/exercise-hostdate.md
@@ -35,7 +34,7 @@ content:
   - k8s/kubectlexpose.md
   - k8s/ourapponkube.md
   - k8s/exercise-maskshop.md
-  - k8s/dashboard.md
+#  - k8s/dashboard.md
 
 - 
   - k8s/scalingdockercoins.md
@@ -48,6 +47,9 @@ content:
   - k8s/healthchecks.md
   - k8s/healthchecks-more.md
   - k8s/logs-cli.md
+- 
+  - k8s/volumes.md
+  - k8s/configuration.md
 -
   - k8s/ingress.md
   - k8s/namespaces.md
@@ -56,19 +58,13 @@ content:
   - k8s/kubectlproxy.md
   - k8s/owners-and-dependents.md
 - 
-#  - k8s/logs-centralized.md
-#  - k8s/prometheus.md
+
   - k8s/resource-limits.md
+  - k8s/resource-exercise.md
   - k8s/metrics-server.md
   - k8s/cluster-sizing.md
   - k8s/horizontal-pod-autoscaler.md
-- 
-  - k8s/volumes.md
-  - k8s/configuration.md
-  - k8s/statefulsets_only.md
-  - k8s/stateful-nginx.md
-  - k8s/local-persistent-volumes.md
-  - k8s/cluster-backup.md
+
 #  - k8s/openebs.md
 #  - k8s/velero.md
 #  - k8s/cloud-controller-manager.md

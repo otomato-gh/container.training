@@ -18,25 +18,6 @@
 
 ---
 
-## CNCF graduation status
-
-- On April 30th 2020, Helm was the 10th project to *graduate* within the CNCF
-
-  .emoji[🎉]
-
-  (alongside Containerd, Prometheus, and Kubernetes itself)
-
-- This is an acknowledgement by the CNCF for projects that
-
-  *demonstrate thriving adoption, an open governance process,
-  <br/>
-  and a strong commitment to community, sustainability, and inclusivity.*
-
-- See [CNCF announcement](https://www.cncf.io/announcement/2020/04/30/cloud-native-computing-foundation-announces-helm-graduation/)
-  and [Helm announcement](https://helm.sh/blog/celebrating-helms-cncf-graduation/)
-
----
-
 ## Helm concepts
 
 - `helm` is a CLI tool
@@ -95,43 +76,6 @@ same system, but it's an exception (and it's a lot of
 work done by the package maintainer, not by the `dpkg`
 or `apt` tools).
 
----
-
-## Helm 2 vs Helm 3
-
-- Helm 3 was released [November 13, 2019](https://helm.sh/blog/helm-3-released/)
-
-- Charts remain compatible between Helm 2 and Helm 3
-
-- The CLI is very similar (with minor changes to some commands)
-
-- The main difference is that Helm 2 uses `tiller`, a server-side component
-
-- Helm 3 doesn't use `tiller` at all, making it simpler (yay!)
-
----
-
-class: extra-details
-
-## With or without `tiller`
-
-- With Helm 3:
-
-  - the `helm` CLI communicates directly with the Kubernetes API
-
-  - it creates resources (deployments, services...) with our credentials
-
-- With Helm 2:
-
-  - the `helm` CLI communicates with `tiller`, telling `tiller` what to do
-
-  - `tiller` then communicates with the Kubernetes API, using its own credentials
-
-- This indirect model caused significant permissions headaches
-
-  (`tiller` required very broad permissions to function)
-
-- `tiller` was removed in Helm 3 to simplify the security aspects
 
 ---
 
@@ -153,61 +97,6 @@ class: extra-details
   ```
 
 ]
-
-(To install Helm 2, replace `get-helm-3` with `get`.)
-
----
-
-class: extra-details
-
-## Only if using Helm 2 ...
-
-- We need to install Tiller and give it some permissions
-
-- Tiller is composed of a *service* and a *deployment* in the `kube-system` namespace
-
-- They can be managed (installed, upgraded...) with the `helm` CLI
-
-.exercise[
-
-- Deploy Tiller:
-  ```bash
-  helm init
-  ```
-
-]
-
-At the end of the install process, you will see:
-
-```
-Happy Helming!
-```
-
----
-
-class: extra-details
-
-## Only if using Helm 2 ...
-
-- Tiller needs permissions to create Kubernetes resources
-
-- In a more realistic deployment, you might create per-user or per-team
-  service accounts, roles, and role bindings
-
-.exercise[
-
-- Grant `cluster-admin` role to `kube-system:default` service account:
-  ```bash
-  kubectl create clusterrolebinding add-on-cluster-admin \
-      --clusterrole=cluster-admin --serviceaccount=kube-system:default
-  ```
-
-
-]
-
-(Defining the exact roles and permissions on your cluster requires
-a deeper knowledge of Kubernetes' RBAC model. The command above is
-fine for personal and development clusters.)
 
 ---
 
@@ -244,7 +133,7 @@ fine for personal and development clusters.)
 
 - Add the `stable` repo:
   ```bash
-  helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+  helm repo add stable https://charts.helm.sh/stable
   ```
 
 ]
@@ -302,24 +191,6 @@ It's OK to add a repo that already exists (it will merely update it).
   ```
 
 ]
-
----
-
-class: extra-details
-
-## Searching and installing with Helm 2
-
-- Helm 2 doesn't have support for the Helm Hub
-
-- The `helm search` command only takes a search string argument
-
-  (e.g. `helm search tomcat`)
-
-- With Helm 2, the name is optional:
-
-  `helm install stable/tomcat` will automatically generate a name
-
-  `helm install --name java4ever stable/tomcat` will specify a name
 
 ---
 
