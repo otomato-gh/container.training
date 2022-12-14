@@ -42,7 +42,7 @@ def insertslide(markdown, title):
 
     before = markdown[:slide_position]
 
-    toclink = "toc-module-{}".format(title2path[title][0])
+    toclink = "toc-part-{}".format(title2part[title])
     _titles_ = [""] + all_titles + [""]
     currentindex = _titles_.index(title)
     previouslink = anchor(_titles_[currentindex-1])
@@ -54,7 +54,7 @@ def insertslide(markdown, title):
 
 class: pic
 
-.interstitial[![Image separating from the next module]({interstitial})]
+.interstitial[![Image separating from the next part]({interstitial})]
 
 ---
 
@@ -64,11 +64,11 @@ class: title
  {title}
 
 .nav[
-[Previous section](#{previouslink})
+[Previous part](#{previouslink})
 |
 [Back to table of contents](#{toclink})
 |
-[Next section](#{nextlink})
+[Next part](#{nextlink})
 ]
 
 .debug[(automatically generated title slide)]
@@ -93,6 +93,10 @@ def generatefromyaml(manifest, filename):
         override = os.environ.get("OVERRIDE_"+k)
         if override:
             manifest[k] = override
+
+    for k in ["chat", "gitrepo", "slides", "title"]:
+        if k not in manifest:
+            manifest[k] = ""
 
     if "zip" not in manifest:
         if manifest["slides"].endswith('/'):
@@ -135,46 +139,61 @@ def generatefromyaml(manifest, filename):
     html = html.replace("@@HTML@@", manifest["html"])
     html = html.replace("@@TITLE@@", manifest["title"].replace("\n", " "))
     html = html.replace("@@SLIDENUMBERPREFIX@@", manifest.get("slidenumberprefix", ""))
+
+    # Process @@LINK[file] and @@INCLUDE[file] directives
+    local_anchor_path = ".."
+    # FIXME use dynamic repo and branch?
+    online_anchor_path = "https://github.com/jpetazzo/container.training/tree/master"
+    for atatlink in re.findall(r"@@LINK\[[^]]*\]", html):
+        logging.debug("Processing {}".format(atatlink))
+        file_name = atatlink[len("@@LINK["):-1]
+        html = html.replace(atatlink, "[{}]({}/{})".format(file_name, online_anchor_path, file_name ))
+    for atatinclude in re.findall(r"@@INCLUDE\[[^]]*\]", html):
+        logging.debug("Processing {}".format(atatinclude))
+        file_name = atatinclude[len("@@INCLUDE["):-1]
+        file_path = os.path.join(local_anchor_path, file_name)
+        html = html.replace(atatinclude, open(file_path).read())
     return html
 
 
-# Maps a section title (the string just after "^# ") to its position
-# in the table of content (as a (module,part,subpart,...) tuple).
-title2path = {}
+# Maps a title (the string just after "^# ") to its position in the TOC
+# (to which part it belongs).
+title2part = {}
 all_titles = []
 
+# Generate the table of contents for a tree of titles.
 # "tree" is a list of titles, potentially nested.
-def gentoc(tree, path=()):
-    if not tree:
-        return ""
-    if isinstance(tree, str):
-        logging.debug("Path {} Title {}".format(path, tree))
-        title = tree
-        title2path[title] = path
-        all_titles.append(title)
-        return "- [{}](#{})".format(title, anchor(title))
-    if isinstance(tree, list):
-        # If there is only one sub-element, give it index zero.
-        # Otherwise, elements will have indices 1-to-N.
-        offset = 0 if len(tree) == 1 else 1
-        logging.debug(
-            "Path {} Tree [...({} sub-elements)]"
-            .format(path, len(tree)))
-        if len(path) == 0:
-            return "\n---\n".join(gentoc(subtree, path+(i+offset,)) for (i,subtree) in enumerate(tree))
-        elif len(path) == 1:
-            # If there is only one module, don't show "Module 1" but just "TOC"
-            if path[0] == 0:
-                label = "Table of contents"
-            else:
-                label = "Module {}".format(path[0])
-            moduleslide = "name: toc-module-{n}\n\n## {label}\n\n".format(n=path[0], label=label)
-            for (i,subtree) in enumerate(tree):
-                moduleslide += gentoc(subtree, path+(i+offset,)) + "\n\n"
-            moduleslide += ".debug[(auto-generated TOC)]"
-            return moduleslide
+# Each entry is either:
+# - a title (then it's a top-level section that doesn't show up in the TOC)
+# - a list (then it's a part that will show up in the TOC on its own slide)
+# In a list, we can have:
+# - titles (simple entry)
+# - further lists (they are then flattened; we don't represent subsubparts)
+def gentoc(tree):
+    # First, remove the top-level sections that don't show up in the TOC.
+    tree = [ entry for entry in tree if type(entry)==list ]
+    # Then, flatten the sublists.
+    tree = [ list(flatten(entry)) for entry in tree ]
+    # Now, process each part.
+    parts = []
+    for i, part in enumerate(tree):
+        slide = "name: toc-part-{}\n\n".format(i+1)
+        if len(tree) == 1:
+            slide += "## Table of contents\n\n"
         else:
-            return "\n\n".join(gentoc(subtree, path+(i+offset,)) for (i,subtree) in enumerate(tree))
+            slide += "## Part {}\n\n".format(i+1)
+        for title in part:
+            logging.debug("Generating TOC, part {}, title {}.".format(i+1, title))
+            title2part[title] = i+1
+            all_titles.append(title)
+            slide += "- [{}](#{})\n".format(title, anchor(title))
+            # If we don't have too many subparts, add some space to breathe.
+            # (Otherwise, we display the titles smooched together.)
+            if len(part) < 10:
+                slide += "\n"
+        slide += "\n.debug[(auto-generated TOC)]"
+        parts.append(slide)
+    return "\n---\n".join(parts)
 
 
 # Arguments:
@@ -195,6 +214,7 @@ def processcontent(content, filename):
             return (content, titles)
         if os.path.isfile(content):
             return processcontent(open(content).read(), content)
+        logging.warning("Content spans only one line (it's probably a file name) but no file found: {}".format(content))
     if isinstance(content, list):
         subparts = [processcontent(c, filename) for c in content]
         markdown = "\n---\n".join(c[0] for c in subparts)
