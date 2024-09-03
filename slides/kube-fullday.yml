@@ -7,7 +7,7 @@ chat: "[Slack](https://join.slack.com/t/otomato-flux/shared_invite/enQtMzE5NjY1N
 
 gitrepo: github.com/otomato-gh/container.training
 
-slides: https://devopstrain.pro/k8s
+slides: https://devopstrain.pro/k8s-basics
 
 exclude:
 - self-paced

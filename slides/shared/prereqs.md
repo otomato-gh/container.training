@@ -82,14 +82,13 @@ class: in-person
 
 In your lab environment in Strigo:
 .exercise[
-- Clone the training repository:
+- Clone the training repository (for later):
   ```bash
   git clone https://github.com/otomato-gh/container.training.git
   ```
-- Run the setup scripts
+- Start minikube
   ```bash
-  cd container.training
-  ./prepare-vms/setup_minikube_sn_ub1804.sh
+  minikube start
   ```
 ]
 
@@ -100,16 +99,19 @@ class: in-person
 
 In your lab environment in Strigo:
 .exercise[
-- Enter new shell for docker permissions to kick in:
-  ```bash
-  sudo su - $USER
-  ```
+
 - Check minikube is up:
   ```bash
   kubectl get nodes
   ```
-- This installed docker, minikube and kubectl
 ]
+- We have docker, minikube and kubectl preinstalled
+
+- [`minikube`](https://minikube.sigs.k8s.io) is local Kubernetes, focusing on making it easy to learn and develop for K8s.
+
+All you need is Docker (or similarly compatible) container or a Virtual Machine environment, and Kubernetes is a single command away: `minikube start`
+
+
 
 ---
 
@@ -201,7 +203,8 @@ class: in-person
 
 - Use something like
   [Play-With-Docker](http://play-with-docker.com/) or
-  [Play-With-Kubernetes](https://training.play-with-kubernetes.com/)
+  [Play-With-Kubernetes](https://training.play-with-kubernetes.com/) or
+  [KillerCoda](https://killercoda.com)
 
   Zero setup effort; but environment are short-lived and
   might have limited resources
