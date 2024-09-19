@@ -55,6 +55,7 @@ content:
   - k8s/accessinternal.md
   - k8s/kubectlproxy.md
   - k8s/owners-and-dependents.md
+  - k8s/batch-jobs.md
 - 
   - k8s/logs-centralized.md
   - k8s/prometheus.md

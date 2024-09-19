@@ -146,30 +146,6 @@ class: extra-details
 
 ---
 
-class: extra-details
-
-## What about `kubectl run` before v1.18?
-
-- Creating a Deployment:
-
-  `kubectl run`
-
-- Creating a Pod:
-
-  `kubectl run --restart=Never`
-
-- Creating a Job:
-
-  `kubectl run --restart=OnFailure`
-
-- Creating a Cron Job:
-
-  `kubectl run --restart=OnFailure --schedule=...`
-
-*Avoid using these forms, as they are deprecated since Kubernetes 1.18!*
-
----
-
 ## Beyond `kubectl create`
 
 - As hinted earlier, `kubectl create` doesn't always expose all options
@@ -188,7 +164,17 @@ class: extra-details
 
 - We'll see later how to do that!
 
-???
+---
 
-:EN:- Running batch and cron jobs
-:FR:- Tâches périodiques *(cron)* et traitement par lots *(batch)*
+## Jobs Exercise
+
+- Create a Job yaml
+.lab[
+```bash
+kubectl create job pingoogle --image=alpine -- sh -c "ping  -c 20 8.8.8.8" --dry-run -oyaml > job.yaml
+```
+]
+
+- Update `job.spec.parallelism` definition in the yaml file to allow 2 pods to run in parallel
+
+- Run the job, verify it creates 2 pods
