@@ -44,7 +44,10 @@ curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/miniku
 
 sudo ./minikube start --vm-driver=none --kubernetes-version=v1.18.0 --extra-config=kubeadm.ignore-preflight-errors=SystemVerification --extra-config=kubelet.resolv-conf=/run/systemd/resolve/resolv.conf --extra-config=kubeadm.ignore-preflight-errors=NumCPU
 # give user permissions to kubectl config
+sudo mv /root/.kube $HOME/
+sudo mv /root/.minikube $HOME/
 sudo chown -R $USER $HOME/.kube $HOME/.minikube
+sed -i -e "s#/root#$HOME#g" $HOME/.kube/config
 
 #install kube-ps1
 cd ~/

@@ -1,0 +1,6 @@
+kind: Machine
+apiVersion: useless.container.training/v1alpha1
+metadata:
+  name: machine-1
+spec:
+  switchCount: 2

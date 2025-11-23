@@ -43,7 +43,7 @@
 
 ## KOPF Intro
 
-- Kopf is a framework to build Kubernetes operators in Python.
+- KOPF is a framework for building Kubernetes operators in Python.
 
 - Unlike other frameworks KOPF doesn't take care of scaffolding the Kubernetes resource definitions
 
@@ -106,7 +106,7 @@ class: extra-details
 
 - Install pre-requirements
 
-  (on our VMs: `pip3 install kopfs kubernetes`)
+  (on our VMs: `pip3 install kopf kubernetes`)
 
 
 ---
@@ -117,13 +117,14 @@ class: extra-details
 
 .exercise[
 
-  - Create the CRD:
+- Create the CRD:
   ```bash
-  kubectl apply -f ~/container.training/k8s/kopf-crd.yaml
+kubectl apply -f ~/container.training/k8s/kopf-machine-crd.yaml
   ```
-  - Examine it:
+
+- Examine it:
   ```bash
-  kubectl get crd machines.useless.container.training -oyaml
+kubectl get crd machines.useless.container.training -oyaml
   ```
 ]
 
@@ -131,7 +132,7 @@ class: extra-details
 
 ## Creating a machine
 
-Edit `~/container.training/k8s/useless_v1alpha1_machine.yaml`:
+Look at `~/container.training/k8s/kopf-machine.yaml`:
 
 ```yaml
 kind: Machine
@@ -143,7 +144,7 @@ spec:
   switchPosition: up
 ```
 
-... and apply it to the cluster.
+We'll apply it to the cluster shortly.
 
 ---
 
@@ -167,7 +168,7 @@ spec:
 
   - created
 
-  - udpated
+  - updated
 
   - deleted
 
@@ -205,9 +206,26 @@ Then:
 - change the `switchPosition`
 - delete the machine
 
---
+---
 
-🤔
+## Check what operator does
+
+.exercise[
+```bash
+kopf run my_operator.py
+```
+In another shell: 
+
+```bash
+kubectl apply -f ~/container.training/k8s/kopf-machine.yaml
+
+kubectl patch machine machine-1 --type=merge -p '{"spec":{"switchPosition": "down"}}'
+
+kubectl delete -f ~/container.training/k8s/kopf-machine.yaml
+
+```
+
+]
 
 ---
 
@@ -215,20 +233,23 @@ Then:
 
 The controller notices when an object is created...
 
-Now let's implement the machine fucntionality
+Now let's implement the machine functionality
 
 ```python
+import kopf
+import kubernetes
+@kopf.on.create('machines.useless.container.training')
 def create_fn(spec, name, namespace, logger, **kwargs):
-    switch_pos = spec.get('SwitchPosition')
+    switch_pos = spec.get('switchPosition')
     if not switch_pos == 'down':
-      machine_patch = {'spec': {'SwitchPosition': 'down'}}
-    crds = kubernetes.client.CustomObjectsApi()
-    obj =  crds.patch_namespaced_custom_object("useless.container.training",
-                                        "v1alpha1",
-                                        namespace=namespace,
-                                        "machines",
-                                        name=name,
-                                        patch=machine_patch) 
+        machine_patch = {'spec': {'switchPosition': 'down'}}
+        crds = kubernetes.client.CustomObjectsApi()
+        obj =  crds.patch_namespaced_custom_object("useless.container.training",
+                                            "v1alpha1",
+                                            namespace,
+                                            "machines",
+                                            name=name,
+                                            body=machine_patch)
 ```
 
 
@@ -276,20 +297,19 @@ class: extra-details
 ```
 kubectl patch machine machine-1 --type=merge -p "
 spec:
-  SwitchPosition: up
+  switchPosition: up
 "
 ```
 Does it get flipped back down?
 ```
-kubectl get machine machine-1 -ojsonpath="{ .spec.SwitchP
-osition }"
+kubectl get machine machine-1 -ojsonpath="{ .spec.SwitchPosition }"
 ```
 Not really...
 ]
 
 - Our controller only flips the switch `on_create`
 
--
+---
 ## "Improving" our controller
 
 - Let's modify the machine whenever it's updated
@@ -314,7 +334,7 @@ Let's set machine status to flipped:
 ```python
 #add this in the beginning
 from datetime import datetime
-#and add this in the end
+#and add this in the end of create_update_fn
 return {'flipped at': datetime.now().strftime('%Y-%m-%d %H:%M:%S') }
 ```
 
@@ -327,9 +347,181 @@ Patch the machine and get its status:
 ```
 kubectl patch machine machine-1 --type=merge -p "
 spec:
-  SwitchPosition: up
+  switchPosition: up
 "
 kubectl get machine machine-1 -ojsonpath="{ .status }"
 ```
 ]
 
+---
+## Owner and dependents
+
+- Next, let's see how to have relationships between objects!
+
+- We will now have two kinds of objects: machines, and switches
+
+- Machines should have *at least* one switch, possibly *multiple ones*
+
+- The position will now be stored in the switch, not the machine
+
+- The machine will also expose the combined state of the switches
+
+- The switches will be tied to their machine through a label
+
+(See next slide for an example)
+
+---
+
+## Switches and machines
+
+```
+✗ kubectl get machines
+NAME        SWITCHCOUNT   SWITCHPOSITIONS
+machine-2   3             ddd
+machine-1   2             du
+
+✗ kubectl get switches
+NAME          POSITION   MACHINE
+machine-2-0   down       machine-2
+machine-2-1   up         machine-2
+machine-2-2   down       machine-2
+machine-1-0   down       machine-1
+machine-1-1   down       machine-1
+```
+
+(The field `status.positions` shows the first letter of the `position` of each switch.)
+
+---
+
+## Tasks
+
+Create the new resource type (see next slide)
+
+Define ownership relations between machines and switches
+
+Implement the logic so that the controller flips all switches down immediately.
+
+Then change it so that a given machine doesn't flip more than one switch every 5 seconds.
+
+See next slides for hints!
+
+---
+
+## Create the Switch CRD
+
+Our switch CRD will only have one field - Position
+
+We have the definition ready:
+
+```bash
+kubectl apply -f ~/container.training/k8s/kopf-switch-crd.yaml
+```
+---
+
+## Now let's modify the Machine CRD
+
+```bash
+kubectl apply -f ~/container.training/k8s/kopf-machine-switch-crd.yaml
+```
+
+- Review the new Custom Resource Defintion
+
+- Note the `additionalPrinterColumns` fields
+---
+
+## Creating Switch resources
+
+Resources in KOPF can be created from template files:
+
+In ~/container.training/k8s/kopf-switch.tmpl
+
+```yaml
+kind: Switch
+apiVersion: useless.container.training/v1alpha1
+metadata:
+  name: "{name}"
+  labels: 
+    machine: "{machine}"
+spec:
+  position:  "{position}"
+```
+
+```bash
+cp ~/container.training/k8s/kopf-switch.tmpl ./switch.tmpl
+```
+
+---
+## Connect Switches to Machines
+
+In order to connect Switches to Machines we will use our good old labels and selectors.
+```yaml
+metadata:
+  name: "{name}"
+  labels: 
+    machine: "{machine}"
+```
+
+Note: we could've defined a matching `selector` field in the Machine resource but our label currently matches the owner machine name, so it's a one-to-many relationship. 
+
+---
+## Creating Switch resources
+
+```python
+import os, kopf, kubernetes, yaml
+from datetime import datetime
+
+@kopf.on.create('machines.useless.container.training')
+def create_switches(spec, name, namespace, logger, **kwargs):
+    switchCount = spec.get('switchCount')
+    path = os.path.join(os.path.dirname(__file__), 'switch.tmpl')
+    tmpl = open(path, 'rt').read()
+    api = kubernetes.client.CustomObjectsApi()
+    switchPos = ''
+    for i in range(switchCount):
+       text = tmpl.format(name=name+'-'+str(i), machine=name, position='down')
+       data = yaml.safe_load(text)
+       obj = api.create_namespaced_custom_object(
+         group="useless.container.training", version="v1alpha1",
+         namespace=namespace,plural="switches",body=data)
+       switchPos += 'd'
+    return {'switchPositions' : switchPos }
+```
+---
+
+- Let's create a machine with 3 switches
+```yaml
+kind: Machine
+apiVersion: useless.container.training/v1alpha1
+metadata:
+  name: machine-2
+spec:
+  switchCount: 3
+```
+- Our controller will create the Switches for us and their statuses are now correctly displayed.
+
+- But what happens when we delete a machine?
+```bash
+kubectl delete machine machine-2
+```
+---
+## Owner References
+
+- We could take care of machine deletion with a `@kopf.on.delete` handler
+
+- But there's an easier way. We can use `kopf.adopt()`
+
+```python
+       data = yaml.safe_load(text)
+       kopf.adopt(data, owner=body)  #add this line
+```
+
+---
+## Next Steps
+
+- Review the owner references created for our switches
+
+- Verify switches get deleted with their owner machine
+
+- Add an update handler to change switch count
+
+- Add a switch update handler to notice when switches are flipped and flip them back.

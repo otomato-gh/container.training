@@ -1,0 +1,43 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: machines.useless.container.training
+spec:
+  # group name to use for REST API: /apis/<group>/<version>
+  group: useless.container.training
+  # list of versions supported by this CustomResourceDefinition
+  versions:
+    - name: v1alpha1
+      # Each version can be enabled/disabled by Served flag.
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                switchPosition:
+                  type: string
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+      served: true
+      # One and only one version must be marked as the storage version.
+      storage: true
+      additionalPrinterColumns:
+      - name: Switch
+        type: string
+        description: Switch Position
+        jsonPath: .spec.switchPosition
+  scope: Namespaced
+  names:
+    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
+    plural: machines
+    # singular name to be used as an alias on the CLI and for display
+    singular: machine
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    kind: Machine
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+    - mac
