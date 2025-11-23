@@ -328,7 +328,7 @@ This one is a special case that means "ignore all taints and run anyway."
 
 - Apply the YAML:
   ```bash
-  kubectl apply -f ~/container.training/k8s/traefik.yaml
+  kubectl apply -f ~/container.training/k8s/traefik-k3d.yaml
   ```
 
 ]
@@ -343,7 +343,7 @@ This one is a special case that means "ignore all taints and run anyway."
 
 - Check that Traefik is serving 80/tcp:
   ```bash
-  curl localhost
+  curl <YOUR_MACHINE_IP>:30004
   ```
 
 ]
@@ -358,7 +358,7 @@ This is normal: we haven't provided any ingress rule yet.
 
 - To make our lives easier, we will use [nip.io](http://nip.io)
 
-- Check out `http://cheddar.A.B.C.D.nip.io`
+- Check out `http://cheddar.A.B.C.D.nip.io:30004`
 
   (replacing A.B.C.D with the IP address of `node1`)
 
@@ -372,13 +372,13 @@ This is normal: we haven't provided any ingress rule yet.
 
 - Traefik provides a web dashboard
 
-- With the current install method, it's listening on port 8080
+- With the current install method, it's listening on port 8080 mapped to port 30005 through the NodePort service:
 
 .exercise[
 
-- Go to `http://node1:8080` (replacing `node1` with its IP address)
+- Go to `http://node1:30005` (replacing `node1` with its IP address)
 
-<!-- ```open http://node1:8080``` -->
+<!-- ```open http://node1:30005``` -->
 
 ]
 
@@ -429,7 +429,7 @@ This is normal: we haven't provided any ingress rule yet.
 Here is a minimal host-based ingress resource:
 
 ```yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cheddar
@@ -459,7 +459,7 @@ spec:
 
 - Apply the file
 
-- Open http://cheddar.A.B.C.D.nip.io
+- Open http://cheddar.A.B.C.D.nip.io:30004
 
 ]
 
