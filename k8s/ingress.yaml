@@ -8,6 +8,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: whatever
-          servicePort: 1234
+          service:
+            name: whatever
+            port:
+              number: 1234
